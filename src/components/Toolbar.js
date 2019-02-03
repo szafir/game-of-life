@@ -9,6 +9,9 @@ class Toolbar extends Component {
         interval: 0
     }
 
+    componentDidMount() {
+        this.props.fillRandomly();
+    }
     executeNextGeneration = () => {
         this.props.nextGeneration();
     }
@@ -25,7 +28,7 @@ class Toolbar extends Component {
 
             this.interval = setInterval(() => {
                 this.props.nextGeneration();
-            }, 100);
+            }, 1);
             this.setState({ interval: this.interval })
         }
         else {

@@ -1,20 +1,29 @@
 import * as actionTypes from "../actions/actionTypes";
 
 
+const amountX = 100;
+const amountY = 60;
+const cellSize = 11;
+
 const initialState = {
     cells: [],
     generationNo: 0,
     alivedCells: 0,
     cellsAmount: 0,
+    fieldWidth: (amountX - 1) * cellSize,
+    fieldHeight: (amountY - 1) * cellSize,
+    cellSize: cellSize
 };
 
-for (let i = 0; i <= 70; i++) {
+
+
+for (let i = 0; i <= amountY; i++) {
     initialState.cells[i] = [];
-    for (let j = 0; j <= 100; j++) {
+    for (let j = 0; j <= amountX; j++) {
         initialState.cells[i][j] = false;
     }
 }
-initialState.cellsAmount = (initialState.cells.length-2) * (initialState.cells[1].length-2);
+initialState.cellsAmount = (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
 
 const reducer = (state = initialState, action) => {
     let cells = [];
@@ -60,7 +69,7 @@ const reducer = (state = initialState, action) => {
                 cells
             }
         case actionTypes.CLEAR_CELLS:
-            // console.log('clear')
+
             cells = initialState.cells.map((item) => [...item]);
             return {
                 ...state,
@@ -69,7 +78,6 @@ const reducer = (state = initialState, action) => {
                 cells
             }
         case actionTypes.FILL_RANDOMLY:
-            // console.log('random')
 
             cells = initialState.cells.map((item) => [...item]);
             for (let i = 1; i < state.cells.length - 1; i++) {

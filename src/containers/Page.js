@@ -1,13 +1,21 @@
 import React, { Component } from "react";
-import Panel from "../components/Panel";
+import PanelFlexbox from "../components/Flexbox/Panel";
+import PanelPosition from "../components/Position/Panel";
+import PanelCanvas from "../components/Canvas/Panel";
 import Toolbar from "../components/Toolbar";
+
+import { Route } from "react-router-dom";
+
+
 
 class Page extends Component {
 
     render() {
         return (
             <div>
-                <Panel />
+                <Route exact path="/" component={PanelPosition} />
+                <Route path="/flexbox" component={PanelFlexbox} />
+                <Route path="/canvas" component={PanelCanvas} />
                 <Toolbar />
             </div>
         )
