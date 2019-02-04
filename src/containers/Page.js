@@ -1,15 +1,12 @@
 import React, { Component } from "react";
+import { Route } from "react-router-dom";
 import PanelFlexbox from "../components/Flexbox/Panel";
 import PanelPosition from "../components/Position/Panel";
 import PanelCanvas from "../components/Canvas/Panel";
 import Toolbar from "../components/Toolbar";
 
-import { Route } from "react-router-dom";
-
-
 
 class Page extends Component {
-
     render() {
         return (
             <div>
@@ -18,7 +15,7 @@ class Page extends Component {
                 <Route path="/canvas" component={PanelCanvas} />
                 <Toolbar />
             </div>
-        )
+        );
     }
 }
 export default Page;

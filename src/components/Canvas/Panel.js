@@ -24,4 +24,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     changeCell: (row, col) => (dispatch({ type: actionTypes.CHANGE_CELL, payload: { row, col } }))
 })
+
 export default connect(mapStateToProps, mapDispatchToProps)(Panel);

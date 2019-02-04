@@ -9,7 +9,6 @@ class Cell extends PureComponent {
 
     render() {
         const cellClass = [
-
             mCell.cell,
             this.props.alive !== false ? mCell.alive : null
         ]
