@@ -6,10 +6,10 @@ import * as actions from "../actions";
 import * as actionTypes from "../actions/actionTypes";
 
 const withPanelState = WrappedComponent => {
-    // console.log(panelProps);
     return class PanelHOC extends Component {
-
-
+        componentDidMount() {
+            console.log('did mount')
+        }
         componentDidUpdate() {
             if (this.props.shouldRun) {
                 setTimeout(() => {
@@ -19,7 +19,6 @@ const withPanelState = WrappedComponent => {
         }
 
         render() {
-            // console.log(this.props)
             return (
                 <WrappedComponent {...this.props} />
             )
@@ -31,6 +30,7 @@ const mapStateToProps = state => ({
     cells: state.cells,
     fieldWidth: state.fieldWidth,
     fieldHeight: state.fieldHeight,
+    cellSize: state.cellSize,
     shouldRun: state.shouldRun
 });
 const mapDispatchToProps = dispatch => ({
@@ -40,14 +40,8 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-// export default connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-// )(PanelHOC);
-
 const composedWithPanelState = compose(
     connect(mapStateToProps, mapDispatchToProps),
     withPanelState
 );
 export default composedWithPanelState;
-// export default withPanelState;

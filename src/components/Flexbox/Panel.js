@@ -1,23 +1,10 @@
 import React, { Component } from "react";
 import Row from "./Row";
-import { connect } from "react-redux";
-import mPanel from "./Panel.module.scss";
-import * as actions from "../../actions";
 
-import * as actionTypes from "../../actions/actionTypes";
+import mPanel from "./Panel.module.scss";
+
 
 class Panel extends Component {
-  onCellClick = (row, col) => {
-    this.props.changeCell(row, col);
-  };
-
-  componentDidUpdate() {
-    if (this.props.shouldRun) {
-      setTimeout(() => {
-        this.props.nextGeneration();
-      }, 1)
-    }
-  }
 
   render() {
     const { cells } = this.props;
@@ -42,18 +29,4 @@ class Panel extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  cells: state.cells,
-  fieldWidth: state.fieldWidth,
-  fieldHeight: state.fieldHeight,
-  shouldRun: state.shouldRun
-});
-const mapDispatchToProps = dispatch => ({
-  nextGeneration: () => dispatch(actions.nextGeneration()),
-  changeCell: (row, col) =>
-    dispatch({ type: actionTypes.CHANGE_CELL, payload: { row, col } })
-});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Panel);
+export default Panel;
