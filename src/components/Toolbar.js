@@ -22,15 +22,8 @@ class Toolbar extends Component {
   };
   interval = 0;
   executeRun = () => {
-    if (!this.state.interval) {
-      this.interval = setInterval(() => {
-        this.props.nextGeneration();
-      }, 1);
-      this.setState({ interval: this.interval });
-    } else {
-      clearInterval(this.interval);
-      this.setState({ interval: 0 });
-    }
+    this.props.startExistence();
+
   };
 
   render() {
@@ -40,13 +33,14 @@ class Toolbar extends Component {
         {this.state.interval ? (
           <button onClick={this.executeRun}>Stop </button>
         ) : (
-            <button onClick={this.executeRun}>Run </button>
+            <button onClick={this.executeRun}>{this.props.shouldRun ? "Stop" : "Run"} </button>
           )}
         <button onClick={this.executeClear}>Clear</button>
         <button onClick={this.executeFillrandomly}>Random</button>
         <span>Generation: {this.props.generationNo}</span>
         <span>Alived cells: {this.props.alivedCells}</span>
         <span>Cells amount: {this.props.cellsAmount}</span>
+        <span>Velocity: {this.props.velocity}/s</span>
       </div>
     );
   }
@@ -55,11 +49,15 @@ class Toolbar extends Component {
 const mapStateToProps = state => ({
   generationNo: state.generationNo,
   alivedCells: state.alivedCells,
-  cellsAmount: state.cellsAmount
+  cellsAmount: state.cellsAmount,
+  velocity: state.velocity,
+  shouldRun: state.shouldRun
 });
 const mapDispatchToProps = dispatch => ({
   nextGeneration: () => dispatch(actions.nextGeneration()),
   clearCells: () => dispatch({ type: actionTypes.CLEAR_CELLS }),
+  startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
+  stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
   fillRandomly: () => dispatch({ type: actionTypes.FILL_RANDOMLY })
 });
 export default connect(

@@ -11,7 +11,10 @@ const initialState = {
   cellsAmount: 0,
   fieldWidth: (amountX - 1) * cellSize,
   fieldHeight: (amountY - 1) * cellSize,
-  cellSize
+  cellSize,
+  generationHistory: [],
+  velocity: 0,
+  shouldRun: false
 };
 
 for (let i = 0; i <= amountY; i++) {
@@ -50,11 +53,16 @@ const reducer = (state = initialState, action) => {
           alivedCells = cells[i][j] ? alivedCells + 1 : alivedCells;
         }
       }
+      const generationHistory = state.generationHistory.slice(state.generationHistory.length - 500);
+      generationHistory.push(new Date().getTime());
+      const velocity = calculateVelocity(generationHistory);
       return {
         ...state,
         generationNo: ++state.generationNo,
         alivedCells,
-        cells
+        cells,
+        generationHistory,
+        velocity
       };
     case actionTypes.CHANGE_CELL:
       cells = state.cells.map(item => [...item]);
@@ -89,9 +97,23 @@ const reducer = (state = initialState, action) => {
         alivedCells,
         cells
       };
+    case actionTypes.START_EXISTENCE:
+      return {
+        ...state,
+        shouldRun: !state.shouldRun
+      }
     default:
       return state;
   }
 };
+
+const calculateVelocity = (history) => {
+  let currentDate = new Date();
+  currentDate.setSeconds(currentDate.getSeconds() - 2);
+  let velocity = history.reduce((prev, curr) => {
+    return currentDate.getTime() < curr ? (prev + 1) : prev;
+  }, 0)
+  return velocity / 2;
+}
 
 export default reducer;
