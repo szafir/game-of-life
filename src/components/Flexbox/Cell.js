@@ -6,6 +6,7 @@ class Cell extends PureComponent {
     this.props.onCellClick(this.props.rowInd, this.props.cellInd);
   };
 
+
   render() {
     const cellClass = [
       mCell.cell,

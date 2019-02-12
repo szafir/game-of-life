@@ -40,8 +40,8 @@ class Toolbar extends Component {
         {this.state.interval ? (
           <button onClick={this.executeRun}>Stop </button>
         ) : (
-          <button onClick={this.executeRun}>Run </button>
-        )}
+            <button onClick={this.executeRun}>Run </button>
+          )}
         <button onClick={this.executeClear}>Clear</button>
         <button onClick={this.executeFillrandomly}>Random</button>
         <span>Generation: {this.props.generationNo}</span>

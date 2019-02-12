@@ -5,6 +5,8 @@ import PanelPosition from "../components/Position/Panel";
 import PanelCanvas from "../components/Canvas/Panel";
 import Toolbar from "../components/Toolbar";
 
+import mPage from "./Page.module.scss";
+
 class Page extends Component {
   render() {
     return (
@@ -13,7 +15,7 @@ class Page extends Component {
         <Route path="/flexbox" component={PanelFlexbox} />
         <Route path="/canvas" component={PanelCanvas} />
         <Toolbar />
-      </div>
+      </div >
     );
   }
 }
