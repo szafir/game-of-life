@@ -12,9 +12,6 @@ import Cell from "./Cell";
 
 const styles = theme => ({
   paper: {
-    // ...theme.mixins.gutters(),
-    // paddingTop: theme.spacing.unit * 2,
-    // paddingBottom: theme.spacing.unit * 2,
     margin: "0px auto",
     background: "#eee",
     backgroundImage: "url(/images/cell_11x11.png)"

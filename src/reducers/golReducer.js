@@ -113,7 +113,7 @@ const calculateVelocity = (history) => {
   let velocity = history.reduce((prev, curr) => {
     return currentDate.getTime() < curr ? (prev + 1) : prev;
   }, 0)
-  return velocity / 2;
+  return (velocity / 2).toFixed(1);
 }
 
 export default reducer;

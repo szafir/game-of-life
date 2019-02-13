@@ -2,6 +2,22 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import * as actionTypes from "../actions/actionTypes";
+import { Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+
+
+
+const styles = theme => ({
+  header: {
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    display: "flex",
+    justifyContent: "flex-start"
+  },
+  button: {
+    marginRight: theme.spacing.unit * 2
+  }
+});
 
 class Toolbar extends Component {
   state = {
@@ -20,37 +36,30 @@ class Toolbar extends Component {
   executeFillrandomly = () => {
     this.props.fillRandomly();
   };
-  interval = 0;
+
   executeRun = () => {
     this.props.startExistence();
 
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
-        <button onClick={this.executeNextGeneration}>Next generation</button>
+      <div className={classes.header}>
+        <Button className={classes.button} variant="contained" size="small" onClick={this.executeNextGeneration}>Next generation</Button>
         {this.state.interval ? (
-          <button onClick={this.executeRun}>Stop </button>
+          <Button className={classes.button} variant="contained" size="small" onClick={this.executeRun}>Stop</Button>
         ) : (
-            <button onClick={this.executeRun}>{this.props.shouldRun ? "Stop" : "Run"} </button>
+            <Button className={classes.button} variant="contained" size="small" onClick={this.executeRun}>{this.props.shouldRun ? "Stop" : "Run"} </Button>
           )}
-        <button onClick={this.executeClear}>Clear</button>
-        <button onClick={this.executeFillrandomly}>Random</button>
-        <span>Generation: {this.props.generationNo}</span>
-        <span>Alived cells: {this.props.alivedCells}</span>
-        <span>Cells amount: {this.props.cellsAmount}</span>
-        <span>Velocity: {this.props.velocity}/s</span>
+        <Button className={classes.button} variant="contained" size="small" onClick={this.executeClear}>Clear</Button>
+        <Button className={classes.button} variant="contained" size="small" onClick={this.executeFillrandomly}>Random</Button>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  generationNo: state.generationNo,
-  alivedCells: state.alivedCells,
-  cellsAmount: state.cellsAmount,
-  velocity: state.velocity,
   shouldRun: state.shouldRun
 });
 const mapDispatchToProps = dispatch => ({
@@ -63,4 +72,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Toolbar);
+)(withStyles(styles)(Toolbar));

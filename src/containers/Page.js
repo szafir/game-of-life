@@ -12,14 +12,11 @@ import withPanelState from "./withPanelState";
 
 class Page extends Component {
   render() {
-    const drawerWidth = 220;
     return (
       <>
         <Header />
         <div style={{
-          // width: `calc(100% - ${drawerWidth}px)`,
           marginTop: 100,
-          // flexGrow: 0,
           flexShrink: 0
         }}>
           <Route exact path="/" component={withPanelState(PanelPosition)} />
@@ -31,5 +28,4 @@ class Page extends Component {
     );
   }
 }
-
 export default Page;
