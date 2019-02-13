@@ -4,18 +4,33 @@ import * as actionTypes from "../../actions/actionTypes";
 import { Stage, Layer } from "react-konva";
 import mPanel from "./Panel.module.scss";
 import * as actions from "../../actions";
+import { Paper, withStyles } from "@material-ui/core";
+
 // import Konva from "konva";
 import Cell from "./Cell";
+
+
+const styles = theme => ({
+  paper: {
+    // ...theme.mixins.gutters(),
+    // paddingTop: theme.spacing.unit * 2,
+    // paddingBottom: theme.spacing.unit * 2,
+    margin: "0px auto",
+    background: "#eee",
+    backgroundImage: "url(/images/cell_11x11.png)"
+  },
+});
+
 
 class Panel extends Component {
 
   render() {
     const style = {
       width: this.props.fieldWidth,
-      height: this.props.fieldHeight
+      height: this.props.fieldHeight,
     };
-    const { cells } = this.props;
-    return <div className={mPanel.Panel} style={style}>
+    const { cells, classes } = this.props;
+    return <Paper elevation={2} className={classes.paper} square={true} style={style} >
       <Stage width={this.props.fieldWidth} height={this.props.fieldHeight}>
         <Layer>
           {cells.map((row, index) => {
@@ -24,12 +39,11 @@ class Panel extends Component {
                 return <Cell rowInd={index} cellInd={cellInd} cellSize={this.props.cellSize} alive={cell} key={`cell-${index}-${cellInd}`} />
               })) : null;
           })}
-
         </Layer>
-      </Stage>;
-    </div>
+      </Stage>
+    </Paper>
   }
 }
 
-export default Panel;
+export default withStyles(styles)(Panel);
 

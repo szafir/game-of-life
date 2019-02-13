@@ -1,7 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 
-const amountX = 100;
-const amountY = 60;
+const amountX = 80;
+const amountY = 50;
 const cellSize = 11;
 
 const initialState = {

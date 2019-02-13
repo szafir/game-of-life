@@ -12,13 +12,21 @@ import withPanelState from "./withPanelState";
 
 class Page extends Component {
   render() {
+    const drawerWidth = 220;
     return (
       <>
         <Header />
-        <Route exact path="/" component={withPanelState(PanelPosition)} />
-        <Route path="/flexbox" component={withPanelState(PanelFlexbox)} />
-        <Route path="/canvas" component={withPanelState(PanelCanvas)} />
-        <Toolbar />
+        <div style={{
+          // width: `calc(100% - ${drawerWidth}px)`,
+          marginTop: 100,
+          // flexGrow: 0,
+          flexShrink: 0
+        }}>
+          <Route exact path="/" component={withPanelState(PanelPosition)} />
+          <Route path="/flexbox" component={withPanelState(PanelFlexbox)} />
+          <Route path="/canvas" component={withPanelState(PanelCanvas)} />
+          <Toolbar />
+        </div>
       </>
     );
   }
