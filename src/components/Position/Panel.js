@@ -8,7 +8,7 @@ const styles = theme => ({
   paper: {
     margin: "0px auto",
     background: "#eee",
-    backgroundImage: "url(/images/cell_11x11.png)"
+    backgroundImage: "url(images/cell_11x11.png)"
   },
 });
 
