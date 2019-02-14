@@ -1,14 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import * as actionTypes from "../../actions/actionTypes";
-import { Stage, Layer } from "react-konva";
-import mPanel from "./Panel.module.scss";
-import * as actions from "../../actions";
-import { Paper, withStyles } from "@material-ui/core";
-
-// import Konva from "konva";
+import React from "react";
 import Cell from "./Cell";
 
+import { Stage, Layer } from "react-konva";
+import { Paper, withStyles } from "@material-ui/core";
 
 const styles = theme => ({
   paper: {
@@ -18,28 +12,26 @@ const styles = theme => ({
   },
 });
 
-
-class Panel extends Component {
-
-  render() {
-    const style = {
-      width: this.props.fieldWidth,
-      height: this.props.fieldHeight,
-    };
-    const { cells, classes } = this.props;
-    return <Paper elevation={2} className={classes.paper} square={true} style={style} >
-      <Stage width={this.props.fieldWidth} height={this.props.fieldHeight}>
+const Panel = props => {
+  const { cells, classes } = props;
+  const style = {
+    width: props.fieldWidth,
+    height: props.fieldHeight
+  };
+  return (
+    <Paper elevation={2} className={classes.paper} square={true} style={style} >
+      <Stage width={props.fieldWidth} height={props.fieldHeight}>
         <Layer>
           {cells.map((row, index) => {
             return index > 0 && index < cells.length - 1 ? (
               row.map((cell, cellInd) => {
-                return <Cell rowInd={index} cellInd={cellInd} cellSize={this.props.cellSize} alive={cell} key={`cell-${index}-${cellInd}`} />
+                return <Cell rowInd={index} cellInd={cellInd} cellSize={props.cellSize} alive={cell} key={`cell-canvas-${index}-${cellInd}`} />
               })) : null;
           })}
         </Layer>
       </Stage>
     </Paper>
-  }
+  )
 }
 
 export default withStyles(styles)(Panel);

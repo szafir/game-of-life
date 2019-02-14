@@ -1,24 +1,29 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 
 import PanelFlexbox from "../components/Flexbox/Panel";
 import PanelPosition from "../components/Position/Panel";
 import PanelCanvas from "../components/Canvas/Panel";
+import withPanelState from "./withPanelState";
 
 import Toolbar from "../components/Toolbar";
 import Header from "../components/Header";
 
-import withPanelState from "./withPanelState";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  panelContainer: {
+    marginTop: theme.spacing.unit * 12
+  }
+});
 
 class Page extends Component {
   render() {
+    const { classes } = this.props;
     return (
       <>
-        <Header />
-        <div style={{
-          marginTop: 100,
-          flexShrink: 0
-        }}>
+        <Header pathname={this.props.location.pathname} />
+        <div className={classes.panelContainer}>
           <Route exact path="/" component={withPanelState(PanelPosition)} />
           <Route path="/flexbox" component={withPanelState(PanelFlexbox)} />
           <Route path="/canvas" component={withPanelState(PanelCanvas)} />
@@ -28,4 +33,4 @@ class Page extends Component {
     );
   }
 }
-export default Page;
+export default withStyles(styles)(withRouter(Page));

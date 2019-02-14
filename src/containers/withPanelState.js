@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import * as actions from "../actions";
 
 import * as actionTypes from "../actions/actionTypes";
@@ -33,11 +32,9 @@ const withPanelState = WrappedComponent => {
         nextGeneration: () => dispatch(actions.nextGeneration()),
         changeCell: (row, col) =>
             dispatch({ type: actionTypes.CHANGE_CELL, payload: { row, col } })
-
     });
 
     return connect(mapStateToProps, mapDispatchToProps)(PanelHOC);
 }
-
 
 export default withPanelState;

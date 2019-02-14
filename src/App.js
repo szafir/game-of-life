@@ -1,16 +1,21 @@
-import React, { Component } from "react";
+import React from "react";
 import Page from "./containers/Page";
-import Header from "./components/Header";
-import "./App.css";
+import { withStyles } from "@material-ui/core/styles";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Page />
-      </div>
-    );
+
+const styles = theme => ({
+  app: {
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center"
   }
-}
+})
 
-export default App;
+const App = props => {
+  return (
+    <div className={props.classes.app}>
+      <Page />
+    </div>
+  )
+}
+export default withStyles(styles)(App);

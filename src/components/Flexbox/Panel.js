@@ -3,8 +3,6 @@ import Row from "./Row";
 import { Paper } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
-import mPanel from "./Panel.module.scss";
-
 const styles = theme => ({
   paper: {
     margin: "0px auto",
@@ -29,7 +27,7 @@ class Panel extends Component {
               items={row}
               rowInd={index}
               onCellClick={this.onCellClick}
-              key={`row-${index}`}
+              key={`row-flexbox-${index}`}
             />
           ) : null;
         })}

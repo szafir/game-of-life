@@ -23,8 +23,7 @@ for (let i = 0; i <= amountY; i++) {
     initialState.cells[i][j] = false;
   }
 }
-initialState.cellsAmount =
-  (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
+initialState.cellsAmount = (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
 
 const reducer = (state = initialState, action) => {
   let cells = [];

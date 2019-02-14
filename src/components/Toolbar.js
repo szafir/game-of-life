@@ -39,7 +39,6 @@ class Toolbar extends Component {
 
   executeRun = () => {
     this.props.startExistence();
-
   };
 
   render() {

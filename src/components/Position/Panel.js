@@ -1,9 +1,8 @@
-import React, { PureComponent } from "react";
-import mPanel from "./Panel.module.scss";
-import Row from "./Row";
+import React from "react";
+import Cell from "./Cell";
+
 import { Paper } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-
 
 const styles = theme => ({
   paper: {
@@ -20,22 +19,24 @@ const Panel = props => {
     height: props.fieldHeight
   };
   return (
-    // <div className={mPanel.Panel} style={style}>
-    <Paper elevation={2} className={classes.paper} square={true} style={style} >
+    <Paper elevation={2} className={classes.paper} square={true} style={style}>
       {
         cells.map((row, index) => {
           return index > 0 && index < cells.length - 1 ? (
-            <Row
-              items={row}
-              rowInd={index}
-              key={`row-${index}`}
-            />
+            row.map((item, cellInd) =>
+              cellInd > 0 && cellInd < row.length - 1 && item ? (
+                <Cell
+                  cellInd={cellInd}
+                  rowInd={index}
+                  alive={item}
+                  key={`cell-positioned-${index}-${cellInd}`}
+                />
+              ) : null
+            )
           ) : null;
         })
       }
-    </Paper >
+    </Paper>
   );
-
-
 }
 export default withStyles(styles)(Panel);

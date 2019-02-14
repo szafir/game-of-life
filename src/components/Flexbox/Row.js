@@ -1,20 +1,28 @@
 import React from "react";
-import mRow from "./Row.module.scss";
 import Cell from "./Cell";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  row: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start"
+  }
+});
 
 const Row = props => (
-  <div className={mRow.row}>
+  <div className={props.classes.row}>
     {props.items.map((item, index) =>
       index > 0 && index < props.items.length - 1 ? (
         <Cell
-          {...props}
           cellInd={index}
           alive={item}
-          key={`cell-${props.rowInd}-${index}`}
+          key={`cell-flexbox-${props.rowInd}-${index}`}
         />
       ) : null
     )}
   </div>
 );
 
-export default Row;
+export default withStyles(styles)(Row);

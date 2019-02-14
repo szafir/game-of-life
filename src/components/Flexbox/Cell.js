@@ -1,19 +1,26 @@
-import React, { PureComponent } from "react";
-import mCell from "./Cell.module.scss";
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 
-class Cell extends PureComponent {
-  cellClick = () => {
-    this.props.onCellClick(this.props.rowInd, this.props.cellInd);
-  };
-
-
-  render() {
-    const cellClass = [
-      mCell.cell,
-      this.props.alive !== false ? mCell.alive : null
-    ];
-
-    return <span className={cellClass.join(" ")} onClick={this.cellClick} />;
+const styles = theme => ({
+  cell: {
+    background: "#aaa",
+    display: "block",
+    width: 9,
+    height: 9,
+    border: "1px solid rgb(220, 220, 220)",
+  },
+  alive: {
+    background: "#fff"
   }
+});
+
+const Cell = props => {
+  const { classes } = props;
+  const cellClass = [
+    classes.cell,
+    props.alive !== false ? classes.alive : null
+  ];
+
+  return <span className={cellClass.join(" ")} />;
 }
-export default Cell;
+export default withStyles(styles)(Cell);
