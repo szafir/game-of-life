@@ -17,7 +17,7 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/game-of-life">
     <Provider store={store}>
       <App />
     </Provider>
