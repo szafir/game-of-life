@@ -35,6 +35,7 @@ const Header = (props) => {
           <Typography variant="h6" color="inherit" noWrap>
             Game of life
           </Typography>
+
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" className={classes.drawer}>
