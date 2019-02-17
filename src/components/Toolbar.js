@@ -4,6 +4,7 @@ import * as actions from "../actions";
 import * as actionTypes from "../actions/actionTypes";
 import { Button, Select, MenuItem, FormControl, InputLabel } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import formations from "../formations";
 
 
 
@@ -51,10 +52,6 @@ class Toolbar extends Component {
   executeClear = () => {
     this.props.clearCells();
   };
-  executeFillrandomly = () => {
-    this.props.fillRandomly();
-  };
-
   executeRun = () => {
     this.props.startExistence();
   };
@@ -63,7 +60,17 @@ class Toolbar extends Component {
       formation: event.target.value
     });
     console.log('formation change')
-
+    if (event.target.value === '') {
+      this.props.clearCells();
+    }
+    else if (event.target.value === "RAND") {
+      this.props.fillRandomly();
+    }
+    else {
+      this.props.fillFormation({
+        formation: event.target.value
+      })
+    }
   }
 
   render() {
@@ -77,7 +84,6 @@ class Toolbar extends Component {
             <Button className={classes.button} variant="contained" size="small" onClick={this.executeRun}>{this.props.shouldRun ? "Stop" : "Run"} </Button>
           )}
         <Button className={classes.button} variant="contained" size="small" onClick={this.executeClear}>Clear</Button>
-        <Button className={classes.button} variant="contained" size="small" onClick={this.executeFillrandomly}>Random</Button>
         <div className={classes.formationContainer}>
           <FormControl className={classes.formationSelector}>
             <InputLabel htmlFor="formation">Formation</InputLabel>
@@ -90,11 +96,9 @@ class Toolbar extends Component {
                 id: 'formation',
               }}
             >
-              <MenuItem value={0}>None</MenuItem>
-              <MenuItem value={1}>Glider</MenuItem>
-              <MenuItem value={2}>Small Exploder</MenuItem>
-              <MenuItem value={3}>Lightweight spaceship (LWSS)</MenuItem>
-              <MenuItem value={4}>Random</MenuItem>
+              <MenuItem value="">None</MenuItem>
+              {formations.labels.map((item, key) => <MenuItem value={key} key={`formationmenu-${key}`}>{item}</MenuItem>)}
+              <MenuItem value="RAND">Random</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -112,7 +116,8 @@ const mapDispatchToProps = dispatch => ({
   clearCells: () => dispatch({ type: actionTypes.CLEAR_CELLS }),
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
-  fillRandomly: () => dispatch({ type: actionTypes.FILL_RANDOMLY })
+  fillRandomly: () => dispatch({ type: actionTypes.FILL_RANDOMLY }),
+  fillFormation: (payload) => dispatch({ type: actionTypes.FILL_FORMATION, payload })
 });
 export default connect(
   mapStateToProps,

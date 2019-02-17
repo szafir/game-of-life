@@ -10,7 +10,7 @@ const withPanelState = WrappedComponent => {
             if (this.props.shouldRun) {
                 setTimeout(() => {
                     this.props.nextGeneration();
-                }, 1)
+                }, 10)
             }
         }
 
