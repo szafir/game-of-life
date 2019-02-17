@@ -1,4 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
+import formations from "../formations";
 
 const initState = () => {
   const amountX = 80;
@@ -116,10 +117,32 @@ const fillRandomly = (state, action) => {
   };
 }
 
+const fillFormation = (state, action) => {
+  const cells = initialState.cells.map(item => [...item]);
+  const formation = formations.matrixes[action.payload.formation];
+  let startX = Math.ceil(cells.length / 2) - Math.ceil(formation.length / 2);
+  let startY = Math.ceil(cells[0].length / 2) - Math.ceil(formation[0].length / 2);
+  for (let i = startX; i < startX + formation.length; i++) {
+    for (let j = startY; j < startY + formation[0].length; j++) {
+      cells[i][j] = formation[i - startX][j - startY];
+    }
+  }
+  return {
+    ...state,
+    cells
+  }
+}
+
 const startExistence = (state, action) => {
   return {
     ...state,
     shouldRun: !state.shouldRun
+  }
+}
+const stopExistence = (state, action) => {
+  return {
+    ...state,
+    shouldRun: false
   }
 }
 const reducer = (state = initialState, action) => {
@@ -129,6 +152,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLEAR_CELLS: return clearCells(state, action);
     case actionTypes.FILL_RANDOMLY: return fillRandomly(state, action);
     case actionTypes.START_EXISTENCE: return startExistence(state, action);
+    case actionTypes.STOP_EXISTENCE: return stopExistence(state, action);
+    case actionTypes.FILL_FORMATION: return fillFormation(state, action);
     default:
       return state;
   }
