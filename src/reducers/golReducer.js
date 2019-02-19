@@ -15,7 +15,8 @@ const initState = () => {
     cellSize,
     generationHistory: [],
     velocity: 0,
-    shouldRun: false
+    shouldRun: false,
+    populationSpeed: 1000 // in ms
   };
 
   for (let i = 0; i <= amountY; i++) {
@@ -24,20 +25,21 @@ const initState = () => {
       initialState.cells[i][j] = false;
     }
   }
-  initialState.cellsAmount = (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
+  initialState.cellsAmount =
+    (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
   return initialState;
-}
+};
 
 const initialState = initState();
 
-const calculateVelocity = (history) => {
+const calculateVelocity = history => {
   let currentDate = new Date();
   currentDate.setSeconds(currentDate.getSeconds() - 2);
   let velocity = history.reduce((prev, curr) => {
-    return currentDate.getTime() < curr ? (prev + 1) : prev;
-  }, 0)
+    return currentDate.getTime() < curr ? prev + 1 : prev;
+  }, 0);
   return (velocity / 2).toFixed(1);
-}
+};
 
 const runGeneration = (state, action) => {
   let alivedCells = 0;
@@ -63,7 +65,9 @@ const runGeneration = (state, action) => {
       alivedCells = cells[i][j] ? alivedCells + 1 : alivedCells;
     }
   }
-  const generationHistory = state.generationHistory.slice(state.generationHistory.length - 500);
+  const generationHistory = state.generationHistory.slice(
+    state.generationHistory.length - 500
+  );
   generationHistory.push(new Date().getTime());
   const velocity = calculateVelocity(generationHistory);
   return {
@@ -74,7 +78,7 @@ const runGeneration = (state, action) => {
     generationHistory,
     velocity
   };
-}
+};
 
 const changeCell = (state, action) => {
   let cells = state.cells.map(item => [...item]);
@@ -83,12 +87,10 @@ const changeCell = (state, action) => {
 
   return {
     ...state,
-    alivedCells: cells[row][col]
-      ? state.alivedCells + 1
-      : state.alivedCells,
+    alivedCells: cells[row][col] ? state.alivedCells + 1 : state.alivedCells,
     cells
   };
-}
+};
 
 const clearCells = (state, action) => {
   const cells = initialState.cells.map(item => [...item]);
@@ -98,7 +100,7 @@ const clearCells = (state, action) => {
     alivedCells: 0,
     cells
   };
-}
+};
 
 const fillRandomly = (state, action) => {
   const cells = initialState.cells.map(item => [...item]);
@@ -115,13 +117,14 @@ const fillRandomly = (state, action) => {
     alivedCells,
     cells
   };
-}
+};
 
 const fillFormation = (state, action) => {
   const cells = initialState.cells.map(item => [...item]);
   const formation = formations.matrixes[action.payload.formation];
   let startX = Math.ceil(cells.length / 2) - Math.ceil(formation.length / 2);
-  let startY = Math.ceil(cells[0].length / 2) - Math.ceil(formation[0].length / 2);
+  let startY =
+    Math.ceil(cells[0].length / 2) - Math.ceil(formation[0].length / 2);
   for (let i = startX; i < startX + formation.length; i++) {
     for (let j = startY; j < startY + formation[0].length; j++) {
       cells[i][j] = formation[i - startX][j - startY];
@@ -130,30 +133,48 @@ const fillFormation = (state, action) => {
   return {
     ...state,
     cells
-  }
-}
+  };
+};
 
 const startExistence = (state, action) => {
   return {
     ...state,
     shouldRun: !state.shouldRun
-  }
-}
+  };
+};
 const stopExistence = (state, action) => {
   return {
     ...state,
     shouldRun: false
-  }
-}
+  };
+};
+const changeSpeed = (state, action) => {
+  let { speed } = action.payload;
+  speed = 101 - speed;
+  let populationSpeed = speed * 10;
+  return {
+    ...state,
+    populationSpeed
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.RUN_GENERATION: return runGeneration(state, action);
-    case actionTypes.CHANGE_CELL: return changeCell(state, action);
-    case actionTypes.CLEAR_CELLS: return clearCells(state, action);
-    case actionTypes.FILL_RANDOMLY: return fillRandomly(state, action);
-    case actionTypes.START_EXISTENCE: return startExistence(state, action);
-    case actionTypes.STOP_EXISTENCE: return stopExistence(state, action);
-    case actionTypes.FILL_FORMATION: return fillFormation(state, action);
+    case actionTypes.RUN_GENERATION:
+      return runGeneration(state, action);
+    case actionTypes.CHANGE_CELL:
+      return changeCell(state, action);
+    case actionTypes.CLEAR_CELLS:
+      return clearCells(state, action);
+    case actionTypes.FILL_RANDOMLY:
+      return fillRandomly(state, action);
+    case actionTypes.START_EXISTENCE:
+      return startExistence(state, action);
+    case actionTypes.STOP_EXISTENCE:
+      return stopExistence(state, action);
+    case actionTypes.FILL_FORMATION:
+      return fillFormation(state, action);
+    case actionTypes.CHANGE_SPEED:
+      return changeSpeed(state, action);
     default:
       return state;
   }

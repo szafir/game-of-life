@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.2",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "konva": "^2.6.0",
     "node-sass": "^4.11.0",
     "react": "^16.7.0",

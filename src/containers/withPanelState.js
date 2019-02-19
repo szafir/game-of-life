@@ -6,11 +6,14 @@ import * as actionTypes from "../actions/actionTypes";
 
 const withPanelState = WrappedComponent => {
     class PanelHOC extends Component {
-        componentDidUpdate() {
-            if (this.props.shouldRun) {
-                setTimeout(() => {
-                    this.props.nextGeneration();
-                }, 10)
+        componentDidUpdate(prevProps) {
+            // console.log('componentDidUpdate')
+            if (this.props.shouldRun && prevProps.populationSpeed === this.props.populationSpeed) {
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        this.props.nextGeneration();
+                    }, prevProps.populationSpeed)
+                })
             }
         }
 
@@ -26,7 +29,8 @@ const withPanelState = WrappedComponent => {
         fieldWidth: state.fieldWidth,
         fieldHeight: state.fieldHeight,
         cellSize: state.cellSize,
-        shouldRun: state.shouldRun
+        shouldRun: state.shouldRun,
+        populationSpeed: state.populationSpeed
     });
     const mapDispatchToProps = dispatch => ({
         nextGeneration: () => dispatch(actions.nextGeneration()),

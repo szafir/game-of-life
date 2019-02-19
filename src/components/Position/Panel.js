@@ -1,25 +1,23 @@
 import React from "react";
 import Cell from "./Cell";
 
-import { Paper } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   paper: {
     margin: "0px auto",
     background: "#eee",
-    backgroundImage: "url(images/cell_11x11.png)"
+    backgroundImage: "url(/images/cell_11x11.png)",
+    display: "flex",
+    flexGrow: 1
   },
 });
 
 const Panel = props => {
   const { cells, classes } = props;
-  const style = {
-    width: props.fieldWidth,
-    height: props.fieldHeight
-  };
+
   return (
-    <Paper elevation={2} className={classes.paper} square={true} style={style}>
+    <div elevation={2} className={classes.paper} square="true">
       {
         cells.map((row, index) => {
           return index > 0 && index < cells.length - 1 ? (
@@ -36,7 +34,7 @@ const Panel = props => {
           ) : null;
         })
       }
-    </Paper>
+    </div>
   );
 }
 export default withStyles(styles)(Panel);

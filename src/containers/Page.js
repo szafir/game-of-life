@@ -6,14 +6,15 @@ import PanelPosition from "../components/Position/Panel";
 import PanelCanvas from "../components/Canvas/Panel";
 import withPanelState from "./withPanelState";
 
-import Toolbar from "../components/Toolbar";
 import Header from "../components/Header";
 
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   panelContainer: {
-    marginTop: theme.spacing.unit * 12
+    marginTop: theme.spacing.unit * 8,
+    flexGrow: 1,
+    display: "flex"
   }
 });
 
@@ -27,7 +28,6 @@ class Page extends Component {
           <Route exact path="/" component={withPanelState(PanelPosition)} />
           <Route path="/flexbox" component={withPanelState(PanelFlexbox)} />
           <Route path="/canvas" component={withPanelState(PanelCanvas)} />
-          <Toolbar />
         </div>
       </>
     );

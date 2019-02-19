@@ -5,6 +5,9 @@ import {
   List, ListItem, ListItemText, Drawer, Divider, AppBar, Toolbar, Typography, Badge
 } from "@material-ui/core";
 import { connect } from "react-redux";
+import Slider from "./SliderUI";
+import * as actionTypes from "../actions/actionTypes";
+import ToolbarCustom from "./Toolbar";
 
 const drawerWidth = 220;
 const styles = theme => ({
@@ -16,26 +19,36 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
   },
-  toolbar: theme.mixins.toolbar,
+  toolbar: {
+    height: theme.spacing.unit * 8,
+  },
   nestedListItem: {
     paddingLeft: theme.spacing.unit * 4,
   },
   badge: {
     top: "50%",
     right: theme.spacing.unit * -0.5
+  },
+  sliderContainer: {
+    padding: theme.spacing.unit * 2
   }
 });
 
 const Header = (props) => {
+  const changeSpeed = (value) => {
+    props.changeSpeed({
+      speed: value
+    })
+  }
   const { classes, pathname } = props;
   return (
     <>
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
+      <AppBar position="fixed" color="default" >
+        <Toolbar className={classes.toolbar}>
           <Typography variant="h6" color="inherit" noWrap>
             Game of life
           </Typography>
-
+          <ToolbarCustom />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" className={classes.drawer}>
@@ -57,30 +70,21 @@ const Header = (props) => {
           </ListItem>
           <ListItem className={classes.nestedListItem} >
             <Badge badgeContent={props.generationNo} showZero={true} max={9999} color="primary" classes={{ badge: classes.badge }}>
-              <ListItemText>Generation no</ListItemText>
+              <ListItemText>Generation</ListItemText>
             </Badge>
           </ListItem>
           <ListItem className={classes.nestedListItem} >
             <Badge badgeContent={props.alivedCells} max={999} color="primary" classes={{ badge: classes.badge }}>
-              <ListItemText>Alived cells</ListItemText>
+              <ListItemText>Population</ListItemText>
             </Badge>
           </ListItem>
           <ListItem className={classes.nestedListItem} >
-            <Badge badgeContent={props.cellsAmount} max={9999} color="primary" classes={{ badge: classes.badge }}>
-              <ListItemText>Cells amount</ListItemText>
-            </Badge>
-          </ListItem>
-          <ListItem className={classes.nestedListItem} >
-            <Badge badgeContent={props.velocity} showZero={true} color="primary" classes={{ badge: classes.badge }}>
-              <ListItemText>Velocity</ListItemText>
-            </Badge>
-          </ListItem>
-          <ListItem className={classes.nestedListItem} >
-            <Badge badgeContent={(props.velocity / props.alivedCells).toFixed(3)} showZero={true} max={9999} color="primary" classes={{ badge: classes.badge }}>
-              <ListItemText>Normalized velocity</ListItemText>
+            <Badge badgeContent={`${props.velocity}/s`} showZero={true} color="primary" classes={{ badge: classes.badge }}>
+              <ListItemText>Generation velociy</ListItemText>
             </Badge>
           </ListItem>
         </List>
+        <Slider label={`Speed`} onChange={changeSpeed}/>
       </Drawer>
     </>
   );
@@ -91,5 +95,10 @@ const mapStateToProps = state => ({
   alivedCells: state.alivedCells,
   cellsAmount: state.cellsAmount,
   velocity: state.velocity,
-})
-export default connect(mapStateToProps, null)(withStyles(styles)(Header));
+});
+
+const mapDispatchToProps = dispatch => ({
+  changeSpeed: (payload) => dispatch({ type: actionTypes.CHANGE_SPEED, payload })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Header));

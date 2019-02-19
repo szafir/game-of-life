@@ -8,7 +8,7 @@ const styles = theme => ({
   paper: {
     margin: "0px auto",
     background: "#eee",
-    backgroundImage: "url(images/cell_11x11.png)"
+    backgroundImage: "url(/images/cell_11x11.png)"
   },
 });
 
@@ -19,7 +19,7 @@ const Panel = props => {
     height: props.fieldHeight
   };
   return (
-    <Paper elevation={2} className={classes.paper} square={true} style={style} >
+    <Paper elevation={2} className={classes.paper} square="true" style={style} >
       <Stage width={props.fieldWidth} height={props.fieldHeight}>
         <Layer>
           {cells.map((row, index) => {

@@ -20,7 +20,7 @@ class Panel extends Component {
       height: this.props.fieldHeight
     };
     return (
-      <Paper elevation={2} className={classes.paper} square={true} style={style} >
+      <Paper elevation={2} className={classes.paper} square="true" style={style} >
         {cells.map((row, index) => {
           return index > 0 && index < cells.length - 1 ? (
             <Row

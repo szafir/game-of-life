@@ -7,7 +7,10 @@ const styles = theme => ({
   app: {
     textAlign: "center",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "flex-start",
+    alignItems: "stretch",
+    alignContent: "center",
+    flexGrow: 1
   }
 })
 
