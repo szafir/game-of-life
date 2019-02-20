@@ -16,7 +16,7 @@ const initState = () => {
     generationHistory: [],
     velocity: 0,
     shouldRun: false,
-    populationSpeed: 1000 // in ms
+    populationSpeed: 100 // in ms
   };
 
   for (let i = 0; i <= amountY; i++) {
