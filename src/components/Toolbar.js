@@ -49,7 +49,7 @@ class Toolbar extends Component {
         value: 3
       }
     });
-    this.executeRun();
+    // this.executeRun();
   }
   executeNextGeneration = () => {
     this.props.nextGeneration();

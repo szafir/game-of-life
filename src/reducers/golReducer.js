@@ -7,6 +7,10 @@ const initState = () => {
   const cellSize = 11;
   const initialState = {
     cells: [],
+    q1Cells: {},
+    q2Cells: {},
+    q3Cells: {},
+    q4Cells: {},
     generationNo: 0,
     alivedCells: 0,
     cellsAmount: 0,
@@ -19,14 +23,14 @@ const initState = () => {
     populationSpeed: 100 // in ms
   };
 
-  for (let i = 0; i <= amountY; i++) {
-    initialState.cells[i] = [];
-    for (let j = 0; j <= amountX; j++) {
-      initialState.cells[i][j] = false;
-    }
-  }
-  initialState.cellsAmount =
-    (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
+  // for (let i = 0; i <= amountY; i++) {
+  //   initialState.cells[i] = [];
+  //   for (let j = 0; j <= amountX; j++) {
+  //     initialState.cells[i][j] = false;
+  //   }
+  // }
+  // initialState.cellsAmount =
+  //   (initialState.cells.length - 2) * (initialState.cells[1].length - 2);
   return initialState;
 };
 
@@ -120,20 +124,46 @@ const fillRandomly = (state, action) => {
 };
 
 const fillFormation = (state, action) => {
-  const cells = initialState.cells.map(item => [...item]);
+  // const cells = initialState.cells.map(item => [...item]);
   const formation = formations.matrixes[action.payload.formation];
-  let startX = Math.ceil(cells.length / 2) - Math.ceil(formation.length / 2);
-  let startY =
-    Math.ceil(cells[0].length / 2) - Math.ceil(formation[0].length / 2);
-  for (let i = startX; i < startX + formation.length; i++) {
-    for (let j = startY; j < startY + formation[0].length; j++) {
-      cells[i][j] = formation[i - startX][j - startY];
+  console.log(formation);
+
+  let startX = Math.ceil(formation.length / 2);
+  let startY = Math.ceil(formation[0].length / 2);
+
+  console.log("y len=", formation.length, " y len=", formation[0].length);
+
+  const q1Cells = {};
+  const q2Cells = {};
+  const q3Cells = {};
+  const q4Cells = {};
+
+  for (let i = 0; i < formation.length; i++) {
+    for (let j = 0; j < formation[0].length; j++) {
+      console.log(i, '_', j, ',-- ', startX - i, ', ', startY - j)
+      if(startX - i > 0 && startY - j > 0) {
+        q2Cells[`${j}_${i}`] = true;
+      } 
+      else if(startX - i > 0 && startY - j <= 0) {
+        q1Cells[`${j- startY}_${i}`] = true;
+      }
     }
   }
   return {
     ...state,
-    cells
+    q1Cells,
+    q2Cells,
+    q3Cells,
+    q4Cells,
+    // q1Cells: {"0_0": true, "0_1": true, "1_1": true, "2_1":true, "3_1":true, "4_1":true},
+    // q2Cells: {"0_0": true, "0_1": true, "1_1": true, "2_1":true, "3_1":true, "4_1":true},
+    // q3Cells: {"0_0": true, "0_1": true, "1_1": true, "2_1":true, "3_1":true, "4_1":true},
+    // q4Cells: {"0_0": true, "0_1": true, "1_1": true, "2_1":true, "3_1":true, "4_1":true}
   };
+  // return {
+  //   ...state,
+  //   cells
+  // };
 };
 
 const startExistence = (state, action) => {

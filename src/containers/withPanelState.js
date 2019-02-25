@@ -26,6 +26,10 @@ const withPanelState = WrappedComponent => {
 
     const mapStateToProps = state => ({
         cells: state.cells,
+        q1Cells: state.q1Cells,
+        q2Cells: state.q2Cells,
+        q3Cells: state.q3Cells,
+        q4Cells: state.q4Cells,
         fieldWidth: state.fieldWidth,
         fieldHeight: state.fieldHeight,
         cellSize: state.cellSize,
