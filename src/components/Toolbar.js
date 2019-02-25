@@ -49,6 +49,7 @@ class Toolbar extends Component {
         value: 3
       }
     });
+    // this.executeNextGeneration();
     // this.executeRun();
   }
   executeNextGeneration = () => {
@@ -66,8 +67,6 @@ class Toolbar extends Component {
     });
     if (event.target.value === "") {
       this.props.clearCells();
-    } else if (event.target.value === "RAND") {
-      this.props.fillRandomly();
     } else {
       this.props.fillFormation({
         formation: event.target.value
@@ -139,7 +138,6 @@ class Toolbar extends Component {
                   {item}
                 </MenuItem>
               ))}
-              <MenuItem value="RAND">Random</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -156,7 +154,6 @@ const mapDispatchToProps = dispatch => ({
   clearCells: () => dispatch({ type: actionTypes.CLEAR_CELLS }),
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
-  fillRandomly: () => dispatch({ type: actionTypes.FILL_RANDOMLY }),
   fillFormation: payload =>
     dispatch({ type: actionTypes.FILL_FORMATION, payload })
 });

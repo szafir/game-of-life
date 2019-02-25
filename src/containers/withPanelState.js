@@ -6,6 +6,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const withPanelState = WrappedComponent => {
     class PanelHOC extends Component {
+    
         componentDidUpdate(prevProps) {
             // console.log('componentDidUpdate')
             if (this.props.shouldRun && prevProps.populationSpeed === this.props.populationSpeed) {

@@ -74,7 +74,7 @@ const Header = (props) => {
             </Badge>
           </ListItem>
           <ListItem className={classes.nestedListItem} >
-            <Badge badgeContent={props.alivedCells} max={999} color="primary" classes={{ badge: classes.badge }}>
+            <Badge badgeContent={props.alivedCells} max={9999} color="primary" classes={{ badge: classes.badge }}>
               <ListItemText>Population</ListItemText>
             </Badge>
           </ListItem>

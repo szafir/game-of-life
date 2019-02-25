@@ -9,25 +9,23 @@ const styles = theme => ({
     height: 6,
     // border: "1px solid rgb(220, 220, 220)",
     position: "absolute",
-    transformOrigin: "right bottom"
-  },
-  alive: {
+    top: 0,
+    left: 0,
+    transformOrigin: "right bottom",
     background: "#fff"
   }
 });
 
 const Cell = props => {
-  const { classes, item, positionX, positionY, translateX, translateY, ratioX, ratioY} = props;
-  const cellClass = [classes.cell, props.alive !== false ? classes.alive : null];
-  const cellSize = 7;
-  const indexes = item.split('_');
-  console.log(indexes)
+  const { classes, item, containerWidth, containerHeight, cellSize } = props;
+
+  const indexes = item.split("_");
   const style = {
-    transform: `translate3d( ${cellSize * (indexes[0]) * ratioX + translateX}px,${cellSize * (indexes[1]) * ratioY + translateY}px, 0)`,
-    [positionX]: 0,
-    [positionY]: 0,
+    transform: `translate3d( ${(cellSize + 1) * indexes[0] +
+      containerWidth / 2}px,${(cellSize + 1) * indexes[1] +
+      containerHeight / 2}px, 0)`
   };
 
-  return <span className={cellClass.join(' ')} style={style} />;
+  return <span className={classes.cell} style={style} />;
 };
 export default withStyles(styles)(Cell);
