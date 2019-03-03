@@ -8,39 +8,9 @@ const styles = theme => ({
   paper: {
     margin: "0px auto",
     background: "rgba(0, 0, 0, 0.14)",
-    // backgroundImage: "url(/images/cell_11x11.png)",
     display: "flex",
     flexGrow: 1,
     flexWrap: "wrap",
-    position: "relative"
-
-  },
-  quater1: {
-    // background: "rgba(0, 0, 0, 0.14)",
-    // backgroundImage: "url(/images/cell_7x7.png)",
-    backgroundPosition: "left bottom",
-    width: "50%",
-    position: "relative"
-  },
-  quater2: {
-    background: "blue",
-    // backgroundImage: "url(/images/cell_7x7.png)",
-    backgroundPosition: "100% 0%",
-    width: "50%",
-    position: "relative"
-  },
-  quater3: {
-    // background: "green",
-    // backgroundImage: "url(/images/cell_7x7.png)",
-    backgroundPosition: "right top",
-    width: "50%",
-    position: "relative"
-  },
-  quater4: {
-    // background: "orange",
-    // backgroundImage: "url(/images/cell_7x7.png)",
-    backgroundPosition: "left top",
-    width: "50%",
     position: "relative"
   }
 });
@@ -52,7 +22,7 @@ class Panel extends Component {
     this.state = {
       containerWidth: 0,
       containerHeight: 0
-    }
+    };
   }
   componentDidMount() {
     this.setState({
@@ -61,15 +31,38 @@ class Panel extends Component {
     });
   }
 
-  render() {
-    const { classes, cells } = this.props;
+  handleOnMouseDownCapture = event => {
+    this.props.dragStart({
+      pageX: event.pageX,
+      pageY: event.pageY
+    });
+  };
+  handleOnMouseUpCapture = event => {
+    this.props.dragStop({
+      pageX: event.pageX,
+      pageY: event.pageY
+    });
+  };
+  handleOnMouseMoveCapture = event => {
+    if (this.props.isDragging) {
+      this.props.dragging({
+        pageX: event.pageX,
+        pageY: event.pageY
+      });
+    }
+  };
 
+  render() {
+    const { classes, cells, viewportX, viewportY } = this.props;
     return (
       <div
         elevation={2}
         className={classes.paper}
         square="true"
         ref={this.pageRef}
+        onMouseDownCapture={this.handleOnMouseDownCapture}
+        onMouseUpCapture={this.handleOnMouseUpCapture}
+        onMouseMoveCapture={this.handleOnMouseMoveCapture}
       >
         {Object.keys(cells).map(item => {
           return (
@@ -78,6 +71,9 @@ class Panel extends Component {
               containerWidth={this.state.containerWidth}
               containerHeight={this.state.containerHeight}
               cellSize={this.props.cellSize}
+              viewportX={viewportX}
+              viewportY={viewportY}
+              key={`cell-${item}`}
             />
           );
         })}

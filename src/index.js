@@ -3,24 +3,28 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import "./index.css";
 
-import { createStore, applyMiddleware, compose } from "redux";
-import golReducer from "./reducers/golReducer";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import cell from "./reducers/cell";
+import viewport from "./reducers/viewport";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 // import invariant from "redux-immutable-state-invariant";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
-  golReducer,
+  combineReducers({
+    cell,
+    viewport
+  }),
   composeEnhancers(applyMiddleware(thunk /*, invariant()*/))
 );
 
 ReactDOM.render(
-  <BrowserRouter basename="/game-of-life">
+  <HashRouter>
     <Provider store={store}>
       <App />
     </Provider>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById("root")
 );

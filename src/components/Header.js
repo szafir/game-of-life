@@ -91,10 +91,10 @@ const Header = (props) => {
 };
 
 const mapStateToProps = state => ({
-  generationNo: state.generationNo,
-  alivedCells: state.alivedCells,
-  cellsAmount: state.cellsAmount,
-  velocity: state.velocity,
+  generationNo: state.cell.generationNo,
+  alivedCells: state.cell.alivedCells,
+  cellsAmount: state.cell.cellsAmount,
+  velocity: state.cell.velocity,
 });
 
 const mapDispatchToProps = dispatch => ({

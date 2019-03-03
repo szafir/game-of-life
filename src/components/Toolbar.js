@@ -147,7 +147,7 @@ class Toolbar extends Component {
 }
 
 const mapStateToProps = state => ({
-  shouldRun: state.shouldRun
+  shouldRun: state.cell.shouldRun
 });
 const mapDispatchToProps = dispatch => ({
   nextGeneration: () => dispatch(actions.nextGeneration()),

@@ -7,10 +7,6 @@ const initState = () => {
   const cellSize = 6;
   const initialState = {
     cells: [],
-    q1Cells: {},
-    q2Cells: {},
-    q3Cells: {},
-    q4Cells: {},
     generationNo: 0,
     alivedCells: 0,
     cellsAmount: 0,
