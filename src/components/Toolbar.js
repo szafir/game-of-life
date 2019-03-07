@@ -114,10 +114,11 @@ class Toolbar extends Component {
           color="primary"
           size="small"
           onClick={this.executeClear}
+          id="clear-button"
         >
           Clear
         </Button>
-        <div className={classes.formationContainer}>
+        <div className={classes.formationContainer} id="formation-selector">
           <FormControl className={classes.formationSelector}>
             <InputLabel htmlFor="formation" className={classes.label}>
               Formation

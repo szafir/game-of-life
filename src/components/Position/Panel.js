@@ -63,6 +63,7 @@ class Panel extends Component {
         onMouseDownCapture={this.handleOnMouseDownCapture}
         onMouseUpCapture={this.handleOnMouseUpCapture}
         onMouseMoveCapture={this.handleOnMouseMoveCapture}
+        id="plane"
       >
         {Object.keys(cells).map(item => {
           return (
