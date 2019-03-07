@@ -58,12 +58,12 @@ const Header = (props) => {
           <ListItem button component={NavLink} to="/" selected={pathname === "/"} >
             <ListItemText>Position implementation</ListItemText>
           </ListItem>
-          <ListItem button component={NavLink} to="/flexbox" selected={pathname === "/flexbox"}>
+          {/* <ListItem button component={NavLink} to="/flexbox" selected={pathname === "/flexbox"}>
             <ListItemText>Flexbox implementation</ListItemText>
           </ListItem>
           <ListItem button component={NavLink} to="/canvas" selected={pathname === "/canvas"}>
             <ListItemText>Canvas implementation</ListItemText>
-          </ListItem>
+          </ListItem> */}
           <Divider />
           <ListItem >
             <ListItemText>Statistics:</ListItemText>
