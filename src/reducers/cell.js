@@ -32,58 +32,54 @@ const calculateVelocity = history => {
   return (velocity / 2).toFixed(1);
 };
 
+const calculateCell = (id, cells) => {
+  const xy = id.split("_").map(num => parseInt(num));
+  const nb = [
+    cells[`${xy[0] - 1}_${xy[1] - 1}`],
+    cells[`${xy[0] - 1}_${xy[1]}`],
+    cells[`${xy[0] - 1}_${xy[1] + 1}`],
+    cells[`${xy[0]}_${xy[1] - 1}`],
+    cells[`${xy[0]}_${xy[1] + 1}`],
+    cells[`${xy[0] + 1}_${xy[1] - 1}`],
+    cells[`${xy[0] + 1}_${xy[1]}`],
+    cells[`${xy[0] + 1}_${xy[1] + 1}`]
+  ];
+  const nbCount = nb.reduce((prev, id) => prev + (id ? 1 : 0), 0);
+
+  let retValue = false;
+  if ([2, 3].includes(nbCount) && cells[`${xy[0]}_${xy[1]}`]) {
+    retValue = true;
+  }
+  if (nbCount === 3 && !cells[`${xy[0]}_${xy[1]}`]) {
+    retValue = true;
+  }
+  return retValue;
+};
+
 const runGeneration = (state, action) => {
-  const cellsToProcess = {};
-  Object.keys(state.cells).map(item => {
-    const xy = item.split("_").map(num => parseInt(num));
-    cellsToProcess[`${xy[0] - 1}_${xy[1] - 1}`] =
-      state.cells[`${xy[0] - 1}_${xy[1] - 1}`];
-    cellsToProcess[`${xy[0] - 1}_${xy[1]}`] =
-      state.cells[`${xy[0] - 1}_${xy[1]}`];
-    cellsToProcess[`${xy[0] - 1}_${xy[1] + 1}`] =
-      state.cells[`${xy[0] - 1}_${xy[1] + 1}`];
-
-    cellsToProcess[`${xy[0]}_${xy[1] - 1}`] =
-      state.cells[`${xy[0]}_${xy[1] - 1}`];
-    cellsToProcess[`${xy[0]}_${xy[1]}`] = state.cells[`${xy[0]}_${xy[1]}`];
-    cellsToProcess[`${xy[0]}_${xy[1] + 1}`] =
-      state.cells[`${xy[0]}_${xy[1] + 1}`];
-
-    cellsToProcess[`${xy[0] + 1}_${xy[1] - 1}`] =
-      state.cells[`${xy[0] + 1}_${xy[1] - 1}`];
-    cellsToProcess[`${xy[0] + 1}_${xy[1]}`] =
-      state.cells[`${xy[0] + 1}_${xy[1]}`];
-    cellsToProcess[`${xy[0] + 1}_${xy[1] + 1}`] =
-      state.cells[`${xy[0] + 1}_${xy[1] + 1}`];
-  });
-
   let cells = {};
-
-  Object.keys(cellsToProcess).map(item => {
+  Object.keys(state.cells).map(item => {
+    const cellsToProcess = [];
     const xy = item.split("_").map(num => parseInt(num));
-    const nb = [
-      state.cells[`${xy[0] - 1}_${xy[1] - 1}`],
-      state.cells[`${xy[0] - 1}_${xy[1]}`],
-      state.cells[`${xy[0] - 1}_${xy[1] + 1}`],
-      state.cells[`${xy[0]}_${xy[1] - 1}`],
-      state.cells[`${xy[0]}_${xy[1] + 1}`],
-      state.cells[`${xy[0] + 1}_${xy[1] - 1}`],
-      state.cells[`${xy[0] + 1}_${xy[1]}`],
-      state.cells[`${xy[0] + 1}_${xy[1] + 1}`]
-    ];
-    const nbCount = nb.reduce((prev, item) => prev + (item ? 1 : 0), 0);
-    if ([2, 3].includes(nbCount) && state.cells[`${xy[0]}_${xy[1]}`]) {
-      cells[item] = true;
-    }
-    if (nbCount === 3 && !state.cells[`${xy[0]}_${xy[1]}`]) {
-      cells[item] = true;
-    }
-    return false;
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1] - 1}`); 
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1]}`); 
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1] + 1}`); 
+    cellsToProcess.push(`${xy[0]}_${xy[1] - 1}`); 
+    cellsToProcess.push(`${xy[0]}_${xy[1]}`); 
+    cellsToProcess.push(`${xy[0]}_${xy[1] + 1}`); 
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1] - 1}`); 
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1]}`); 
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1] + 1}`); 
+    
+    cellsToProcess.map(item => {
+      if (calculateCell(item, state.cells)) {
+        cells[item] = true;
+      }
+      return false;
+    });
   });
 
-  const generationHistory = state.generationHistory.slice(
-    state.generationHistory.length - 500
-  );
+  const generationHistory = state.generationHistory.slice(state.generationHistory.length - 500);
   generationHistory.push(new Date().getTime());
   const velocity = calculateVelocity(generationHistory);
 
@@ -120,14 +116,12 @@ const clearCells = (state, action) => {
 };
 
 const fillFormation = (state, action) => {
-
   const formation = formations.matrixes[action.payload.formation];
   let startX = Math.ceil(formation[0].length / 2);
   let startY = Math.ceil(formation.length / 2);
   const cells = {};
   for (let i = -1 * startX; i < formation[0].length - startX; i++) {
     for (let j = -1 * startY; j < formation.length - startY; j++) {
-  
       if (formation[j + startY][i + startX]) {
         cells[`${i}_${j}`] = true;
       }
@@ -137,7 +131,6 @@ const fillFormation = (state, action) => {
     ...state,
     cells
   };
- 
 };
 
 const startExistence = (state, action) => {

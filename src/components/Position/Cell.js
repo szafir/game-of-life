@@ -20,12 +20,12 @@ const Cell = props => {
   const { classes, item, containerWidth, containerHeight, cellSize, viewportX, viewportY } = props;
 
   const indexes = item.split("_");
+  const x = viewportX + (cellSize + 1) * indexes[0] + containerWidth / 2;
+  const y = viewportY + (cellSize + 1) * indexes[1] + containerHeight / 2;
   const style = {
-    transform: `translate3d(${viewportX + (cellSize + 1) * indexes[0] +
-      containerWidth / 2}px,${viewportY + (cellSize + 1) * indexes[1] +
-      containerHeight / 2}px, 0)`
+    transform: `translate3d(${x}px,${y}px, 0)`
   };
-
-  return <span className={classes.cell} style={style} />;
+  const showCell = !(x < 0 || x > containerWidth || y < 0 || y > containerHeight);
+  return showCell ? <span className={classes.cell} style={style} /> : null;
 };
 export default withStyles(styles)(Cell);

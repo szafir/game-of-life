@@ -11,7 +11,11 @@ const styles = theme => ({
     display: "flex",
     flexGrow: 1,
     flexWrap: "wrap",
-    position: "relative"
+    position: "relative",
+    cursor: "grab"
+  },
+  isDragging: {
+    cursor: "grabbing"
   }
 });
 
@@ -54,10 +58,14 @@ class Panel extends Component {
 
   render() {
     const { classes, cells, viewportX, viewportY } = this.props;
+    const paperClasses = [classes.paper];
+    if (this.props.isDragging) {
+      paperClasses.push(classes.isDragging);
+    }
     return (
       <div
         elevation={2}
-        className={classes.paper}
+        className={paperClasses.join(" ")}
         square="true"
         ref={this.pageRef}
         onMouseDownCapture={this.handleOnMouseDownCapture}
