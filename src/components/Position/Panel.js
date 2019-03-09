@@ -1,42 +1,94 @@
-import React from "react";
+import React, { Component } from "react";
 import Cell from "./Cell";
 
-import { Paper } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { relative } from "path";
 
 const styles = theme => ({
   paper: {
     margin: "0px auto",
-    background: "#eee",
-    backgroundImage: "url(images/cell_11x11.png)"
+    background: "rgba(0, 0, 0, 0.14)",
+    display: "flex",
+    flexGrow: 1,
+    flexWrap: "wrap",
+    position: "relative",
+    cursor: "grab"
   },
+  isDragging: {
+    cursor: "grabbing"
+  }
 });
 
-const Panel = props => {
-  const { cells, classes } = props;
-  const style = {
-    width: props.fieldWidth,
-    height: props.fieldHeight
+class Panel extends Component {
+  constructor(refs) {
+    super(refs);
+    this.pageRef = React.createRef();
+    this.state = {
+      containerWidth: 0,
+      containerHeight: 0
+    };
+  }
+  componentDidMount() {
+    this.setState({
+      containerWidth: this.pageRef.current.offsetWidth,
+      containerHeight: this.pageRef.current.offsetHeight
+    });
+  }
+
+  handleOnMouseDownCapture = event => {
+    this.props.dragStart({
+      pageX: event.pageX,
+      pageY: event.pageY
+    });
   };
-  return (
-    <Paper elevation={2} className={classes.paper} square={true} style={style}>
-      {
-        cells.map((row, index) => {
-          return index > 0 && index < cells.length - 1 ? (
-            row.map((item, cellInd) =>
-              cellInd > 0 && cellInd < row.length - 1 && item ? (
-                <Cell
-                  cellInd={cellInd}
-                  rowInd={index}
-                  alive={item}
-                  key={`cell-positioned-${index}-${cellInd}`}
-                />
-              ) : null
-            )
-          ) : null;
-        })
-      }
-    </Paper>
-  );
+  handleOnMouseUpCapture = event => {
+    this.props.dragStop({
+      pageX: event.pageX,
+      pageY: event.pageY
+    });
+  };
+  handleOnMouseMoveCapture = event => {
+    if (this.props.isDragging) {
+      this.props.dragging({
+        pageX: event.pageX,
+        pageY: event.pageY
+      });
+    }
+  };
+
+  render() {
+    const { classes, cells, viewportX, viewportY } = this.props;
+    const paperClasses = [classes.paper];
+    if (this.props.isDragging) {
+      paperClasses.push(classes.isDragging);
+    }
+    return (
+      <div
+        elevation={2}
+        className={paperClasses.join(" ")}
+        square="true"
+        ref={this.pageRef}
+        onMouseDownCapture={this.handleOnMouseDownCapture}
+        onMouseUpCapture={this.handleOnMouseUpCapture}
+        onMouseMoveCapture={this.handleOnMouseMoveCapture}
+        id="plane"
+      >
+        {Object.keys(cells).map(item => {
+          return (
+            <Cell
+              item={item}
+              containerWidth={this.state.containerWidth}
+              containerHeight={this.state.containerHeight}
+              cellSize={this.props.cellSize}
+              viewportX={viewportX}
+              viewportY={viewportY}
+              key={`cell-${item}`}
+            />
+          );
+        })}
+      </div>
+    );
+  }
 }
+
 export default withStyles(styles)(Panel);

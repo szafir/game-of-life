@@ -16,6 +16,10 @@ const formations = [
         matrix: [[true, true, true, true, true, true, true, true, true, true]]
     },
     {
+        label: "100 Cell Row",
+        matrix: [[true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,true, true, true, true, true, true, true, true, true, true,]]
+    },
+    {
         label: "Lightweight spaceship (LWSS)",
         matrix: [[false, true, true, true, true], [true, false, false, false, true], [false, false, false, false, true], [true, false, false, true, false]]
     },
