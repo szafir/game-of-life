@@ -154,7 +154,7 @@ const mapDispatchToProps = dispatch => ({
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
   fillFormation: payload =>
-    dispatch({ type: actionTypes.FILL_FORMATION, payload })
+    dispatch(actions.fillFormation(payload))
 });
 export default connect(
   mapStateToProps,

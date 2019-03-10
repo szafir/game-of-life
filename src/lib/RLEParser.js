@@ -1,8 +1,13 @@
 class RLEParser {
-  parseString(rleString) {
-    const startCoord = pattern.substr(0, pattern.indexOf(";")).split("x");
-    const lines = pattern
-      .substr(pattern.indexOf(";") + 1)
+  constructor(formation) {
+    this.formation = formation;
+  }
+  parseBoundingBox = () => {
+    return this.formation.substr(0, this.formation.indexOf(";")).split("x");
+  };
+  prepareLines = () => {
+    const lines = this.formation
+      .substr(this.formation.indexOf(";") + 1)
       .replace("!", "")
       .split("$")
       .map(line => {
@@ -17,33 +22,49 @@ class RLEParser {
       })
       .join("$")
       .split("$");
-
-    const processedLines = lines.map((line, index) => {
-      let number = "";
-
-      const items = line
-        .split("")
-        .map(item => {
-          if (item === "o" || item === "b") {
-            if (number === "") {
-              number = "";
-              return item;
-            } else {
-              const ret = item.repeat(number);
-              number = "";
-              return ret;
-            }
+    return lines;
+  };
+  parseSingleLine = line => {
+    let number = "";
+    const items = line
+      .split("")
+      .map(item => {
+        if (item === "o" || item === "b") {
+          if (number === "") {
+            number = "";
+            return item;
           } else {
-            number += item;
+            const ret = item.repeat(number);
+            number = "";
+            return ret;
           }
-          return "";
-        })
-        .join("");
-      return items;
-    });
-  }
+        } else {
+          number += item;
+        }
+        return "";
+      })
+      .join("");
+    return items;
+  };
+  parseLines = () => {
+    const lines = this.prepareLines();
+    const parsedLines = lines.map(line => this.parseSingleLine(line));
+    return parsedLines;
+  };
+  parse = () => {
+    const boundingBox = this.parseBoundingBox();
+    const parsedLines = this.parseLines();
+
+    return {
+      boundingBox,
+      parsedLines
+    };
+  };
 }
 
 export default RLEParser;
 
-export const parseString = rleString => {};
+export const parseRLE = rleString => {
+  const parser = new RLEParser(rleString);
+  return parser.parse();
+};

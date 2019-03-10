@@ -1,19 +1,12 @@
 import * as actionTypes from "../actions/actionTypes";
-import formations from "../formations";
 
 const initState = () => {
-  const amountX = 80;
-  const amountY = 50;
   const cellSize = 6;
   const initialState = {
     cells: [],
     generationNo: 0,
     alivedCells: 0,
-    cellsAmount: 0,
-    fieldWidth: (amountX - 1) * cellSize,
-    fieldHeight: (amountY - 1) * cellSize,
     cellSize,
-    generationHistory: [],
     velocity: 0,
     shouldRun: false,
     populationSpeed: 100 // in ms
@@ -22,76 +15,6 @@ const initState = () => {
 };
 
 const initialState = initState();
-
-const calculateVelocity = history => {
-  let currentDate = new Date();
-  currentDate.setSeconds(currentDate.getSeconds() - 2);
-  let velocity = history.reduce((prev, curr) => {
-    return currentDate.getTime() < curr ? prev + 1 : prev;
-  }, 0);
-  return (velocity / 2).toFixed(1);
-};
-
-const calculateCell = (id, cells) => {
-  const xy = id.split("_").map(num => parseInt(num));
-  const nb = [
-    cells[`${xy[0] - 1}_${xy[1] - 1}`],
-    cells[`${xy[0] - 1}_${xy[1]}`],
-    cells[`${xy[0] - 1}_${xy[1] + 1}`],
-    cells[`${xy[0]}_${xy[1] - 1}`],
-    cells[`${xy[0]}_${xy[1] + 1}`],
-    cells[`${xy[0] + 1}_${xy[1] - 1}`],
-    cells[`${xy[0] + 1}_${xy[1]}`],
-    cells[`${xy[0] + 1}_${xy[1] + 1}`]
-  ];
-  const nbCount = nb.reduce((prev, id) => prev + (id ? 1 : 0), 0);
-
-  let retValue = false;
-  if ([2, 3].includes(nbCount) && cells[`${xy[0]}_${xy[1]}`]) {
-    retValue = true;
-  }
-  if (nbCount === 3 && !cells[`${xy[0]}_${xy[1]}`]) {
-    retValue = true;
-  }
-  return retValue;
-};
-
-const runGeneration = (state, action) => {
-  let cells = {};
-  Object.keys(state.cells).map(item => {
-    const cellsToProcess = [];
-    const xy = item.split("_").map(num => parseInt(num));
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] - 1}`);
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1]}`);
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] + 1}`);
-    cellsToProcess.push(`${xy[0]}_${xy[1] - 1}`);
-    cellsToProcess.push(`${xy[0]}_${xy[1]}`);
-    cellsToProcess.push(`${xy[0]}_${xy[1] + 1}`);
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] - 1}`);
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1]}`);
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] + 1}`);
-
-    cellsToProcess.map(item => {
-      if (calculateCell(item, state.cells)) {
-        cells[item] = true;
-      }
-      return false;
-    });
-  });
-
-  const generationHistory = state.generationHistory.slice(state.generationHistory.length - 500);
-  generationHistory.push(new Date().getTime());
-  const velocity = calculateVelocity(generationHistory);
-
-  return {
-    ...state,
-    generationNo: ++state.generationNo,
-    alivedCells: Object.keys(cells).length,
-    cells,
-    generationHistory,
-    velocity
-  };
-};
 
 const changeCell = (state, action) => {
   let cells = state.cells.map(item => [...item]);
@@ -105,7 +28,7 @@ const changeCell = (state, action) => {
   };
 };
 
-const clearCells = (state, action) => {
+const clearCells = (state) => {
   const cells = {};
   return {
     ...state,
@@ -115,70 +38,19 @@ const clearCells = (state, action) => {
   };
 };
 
-const fillFormation = (state, action) => {
-  const pattern = formations.patterns[action.payload.formation];
-  const startCoord = pattern.substr(0, pattern.indexOf(";")).split("x");
-  let translateX = Math.ceil(startCoord[0] / 2);
-  let translateY = Math.ceil(startCoord[1] / 2);
-  const lines = pattern
-    .substr(pattern.indexOf(";") + 1)
-    .replace("!", "")
-    .split("$")
-    .map(line => {
-      if (line) {
-        line = line.trim();
-        let emptyLines = line.match(/(\d{1,})$/gm);
-        if (emptyLines) {
-          line += "$".repeat(emptyLines - 1);
-        }
-      }
-      return line;
-    })
-    .join("$")
-    .split("$");
- 
-  const processedLines = lines.map((line, index) => {
- 
-    let number = "";
-
-    const items = line
-      .split("")
-      .map(item => {
-        if (item === "o" || item === "b") {
-          if (number === "") {
-            number = "";
-            return item;
-          } else {
-            const ret = item.repeat(number);
-            number = "";
-            return ret;
-          }
-        } else {
-          number += item;
-        }
-        return "";
-      })
-      .join("");
-    return items;
-  });
-
-  const cells = {};
-  for (let i = 0; i < startCoord[0]; i++) {
-    for (let j = 0; j < startCoord[1]; j++) {
-
-      if (
-        processedLines &&
-        processedLines[j] &&
-        processedLines[j][i] &&
-        processedLines[j][i] === "o"
-      ) {
-        cells[`${i - translateX}_${j - translateY}`] = true;
-      }
-    }
-  }
+const nextGeneration = (state, action) => {
+  const {
+    cells,
+    generationNo = state.generationNo + 1,
+    alivedCells = Object.keys(cells).length,
+    velocity = state.velocity
+  } = action.payload;
   return {
     ...state,
-    cells
+    cells,
+    generationNo,
+    alivedCells,
+    velocity
   };
 };
 
@@ -205,8 +77,6 @@ const changeSpeed = (state, action) => {
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.RUN_GENERATION:
-      return runGeneration(state, action);
     case actionTypes.CHANGE_CELL:
       return changeCell(state, action);
     case actionTypes.CLEAR_CELLS:
@@ -215,10 +85,10 @@ const reducer = (state = initialState, action) => {
       return startExistence(state, action);
     case actionTypes.STOP_EXISTENCE:
       return stopExistence(state, action);
-    case actionTypes.FILL_FORMATION:
-      return fillFormation(state, action);
     case actionTypes.CHANGE_SPEED:
       return changeSpeed(state, action);
+    case actionTypes.NEXT_GENERATION:
+      return nextGeneration(state, action);
     default:
       return state;
   }
