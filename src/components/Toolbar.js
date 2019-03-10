@@ -2,13 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import * as actionTypes from "../actions/actionTypes";
-import {
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel
-} from "@material-ui/core";
+import { Button, Select, MenuItem, FormControl, InputLabel } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import formations from "../formations";
 
@@ -51,7 +45,7 @@ class Toolbar extends Component {
     });
   }
   executeNextGeneration = () => {
-    this.props.nextGeneration();
+    this.props.nextGeneration({ cells: this.props.cells });
   };
   executeClear = () => {
     this.props.clearCells();
@@ -146,15 +140,15 @@ class Toolbar extends Component {
 }
 
 const mapStateToProps = state => ({
-  shouldRun: state.cell.shouldRun
+  shouldRun: state.cell.shouldRun,
+  cells: state.cell.cells
 });
 const mapDispatchToProps = dispatch => ({
-  nextGeneration: () => dispatch(actions.nextGeneration()),
+  nextGeneration: payload => dispatch(actions.nextGeneration(payload)),
   clearCells: () => dispatch({ type: actionTypes.CLEAR_CELLS }),
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
-  fillFormation: payload =>
-    dispatch(actions.fillFormation(payload))
+  fillFormation: payload => dispatch(actions.fillFormation(payload))
 });
 export default connect(
   mapStateToProps,
