@@ -46,11 +46,9 @@ class Toolbar extends Component {
   componentDidMount() {
     this.executeFormationChange({
       target: {
-        value: 3
+        value: 4
       }
     });
-    // this.executeNextGeneration();
-    // this.executeRun();
   }
   executeNextGeneration = () => {
     this.props.nextGeneration();

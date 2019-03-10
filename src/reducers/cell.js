@@ -61,16 +61,16 @@ const runGeneration = (state, action) => {
   Object.keys(state.cells).map(item => {
     const cellsToProcess = [];
     const xy = item.split("_").map(num => parseInt(num));
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] + 1}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1] + 1}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] + 1}`); 
-    
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1] - 1}`);
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1]}`);
+    cellsToProcess.push(`${xy[0] - 1}_${xy[1] + 1}`);
+    cellsToProcess.push(`${xy[0]}_${xy[1] - 1}`);
+    cellsToProcess.push(`${xy[0]}_${xy[1]}`);
+    cellsToProcess.push(`${xy[0]}_${xy[1] + 1}`);
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1] - 1}`);
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1]}`);
+    cellsToProcess.push(`${xy[0] + 1}_${xy[1] + 1}`);
+
     cellsToProcess.map(item => {
       if (calculateCell(item, state.cells)) {
         cells[item] = true;
@@ -116,14 +116,63 @@ const clearCells = (state, action) => {
 };
 
 const fillFormation = (state, action) => {
-  const formation = formations.matrixes[action.payload.formation];
-  let startX = Math.ceil(formation[0].length / 2);
-  let startY = Math.ceil(formation.length / 2);
+  const pattern = formations.patterns[action.payload.formation];
+  const startCoord = pattern.substr(0, pattern.indexOf(";")).split("x");
+  let translateX = Math.ceil(startCoord[0] / 2);
+  let translateY = Math.ceil(startCoord[1] / 2);
+  const lines = pattern
+    .substr(pattern.indexOf(";") + 1)
+    .replace("!", "")
+    .split("$")
+    .map(line => {
+      if (line) {
+        line = line.trim();
+        let emptyLines = line.match(/(\d{1,})$/gm);
+        if (emptyLines) {
+          line += "$".repeat(emptyLines - 1);
+        }
+      }
+      return line;
+    })
+    .join("$")
+    .split("$");
+ 
+  const processedLines = lines.map((line, index) => {
+ 
+    let number = "";
+
+    const items = line
+      .split("")
+      .map(item => {
+        if (item === "o" || item === "b") {
+          if (number === "") {
+            number = "";
+            return item;
+          } else {
+            const ret = item.repeat(number);
+            number = "";
+            return ret;
+          }
+        } else {
+          number += item;
+        }
+        return "";
+      })
+      .join("");
+    return items;
+  });
+
   const cells = {};
-  for (let i = -1 * startX; i < formation[0].length - startX; i++) {
-    for (let j = -1 * startY; j < formation.length - startY; j++) {
-      if (formation[j + startY][i + startX]) {
-        cells[`${i}_${j}`] = true;
+  for (let i = 0; i < startCoord[0]; i++) {
+    for (let j = 0; j < startCoord[1]; j++) {
+
+      if (
+        processedLines &&
+        processedLines[j] &&
+        processedLines[j][i] &&
+        processedLines[j][i] === "o"
+      ) {
+        cells[`${i - translateX}_${j - translateY}`] = true;
       }
     }
   }
