@@ -48,6 +48,7 @@ class Plane {
         }
         return false;
       });
+      return false;
     });
     return calculatedCells;
   };

@@ -5,7 +5,13 @@ import { calculateGeneration } from "../lib/Plane";
 
 export const fillFormation = payload => {
   const { formation } = payload;
-  const parsedData = parseRLE(formations.patterns[formation]);
+  let { pattern } = payload;
+
+  if (Number.isInteger(formation)) {
+    pattern = formations.patterns[formation];
+  }
+
+  const parsedData = parseRLE(pattern);
   const { boundingBox, parsedLines } = parsedData;
   let translateX = Math.ceil(boundingBox[0] / 2);
   let translateY = Math.ceil(boundingBox[1] / 2);
@@ -50,6 +56,18 @@ export const nextGeneration = payload => {
     payload: {
       cells: calculatedCells,
       velocity
+    }
+  };
+};
+
+export const importFormation = payload => {
+  console.log(payload);
+
+  return {
+    type: false,
+    payload: {
+      // cells: calculatedCells,
+      // velocity
     }
   };
 };

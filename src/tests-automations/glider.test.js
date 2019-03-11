@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-describe("Glider", async () => {
+describe.skip("Glider", async () => {
   test("check if glider is rendering properly", async () => {
     const browser = await puppeteer.launch({
       headless: false

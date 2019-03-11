@@ -9,7 +9,7 @@ formations.map((item) => {
     patterns.push(item.pattern);
     return false;
 })
-
+    
 export default {
     labels,
     matrixes,

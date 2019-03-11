@@ -1,13 +1,24 @@
 class RLEParser {
-  constructor(formation) {
-    this.formation = formation;
+  constructor(pattern) {
+    this.rawPattern = pattern;
+    this.pattern = this.preparePattern(pattern);
   }
-  parseBoundingBox = () => {
-    return this.formation.substr(0, this.formation.indexOf(";")).split("x");
+  preparePattern = pattern => {
+    const lines = pattern.split("\n").filter(line => line && line.indexOf("#") !== 0);
+
+    this.boundingBox = this.parseBoundingBox(lines[0]);
+    lines.shift();
+    return lines.join("\n");
+  };
+
+  parseBoundingBox = line => {
+    return line
+      .split(", ")
+      .filter(line => ["x", "y"].includes(line[0]))
+      .map(coord => parseInt(coord.match(/(\d{1,})$/gm)[0]));
   };
   prepareLines = () => {
-    const lines = this.formation
-      .substr(this.formation.indexOf(";") + 1)
+    const lines = this.pattern
       .replace("!", "")
       .split("$")
       .map(line => {
@@ -52,11 +63,10 @@ class RLEParser {
     return parsedLines;
   };
   parse = () => {
-    const boundingBox = this.parseBoundingBox();
     const parsedLines = this.parseLines();
 
     return {
-      boundingBox,
+      boundingBox: this.boundingBox,
       parsedLines
     };
   };
