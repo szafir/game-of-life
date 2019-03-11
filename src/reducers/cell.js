@@ -1,19 +1,12 @@
 import * as actionTypes from "../actions/actionTypes";
-import formations from "../formations";
 
 const initState = () => {
-  const amountX = 80;
-  const amountY = 50;
   const cellSize = 6;
   const initialState = {
     cells: [],
     generationNo: 0,
     alivedCells: 0,
-    cellsAmount: 0,
-    fieldWidth: (amountX - 1) * cellSize,
-    fieldHeight: (amountY - 1) * cellSize,
     cellSize,
-    generationHistory: [],
     velocity: 0,
     shouldRun: false,
     populationSpeed: 100 // in ms
@@ -22,76 +15,6 @@ const initState = () => {
 };
 
 const initialState = initState();
-
-const calculateVelocity = history => {
-  let currentDate = new Date();
-  currentDate.setSeconds(currentDate.getSeconds() - 2);
-  let velocity = history.reduce((prev, curr) => {
-    return currentDate.getTime() < curr ? prev + 1 : prev;
-  }, 0);
-  return (velocity / 2).toFixed(1);
-};
-
-const calculateCell = (id, cells) => {
-  const xy = id.split("_").map(num => parseInt(num));
-  const nb = [
-    cells[`${xy[0] - 1}_${xy[1] - 1}`],
-    cells[`${xy[0] - 1}_${xy[1]}`],
-    cells[`${xy[0] - 1}_${xy[1] + 1}`],
-    cells[`${xy[0]}_${xy[1] - 1}`],
-    cells[`${xy[0]}_${xy[1] + 1}`],
-    cells[`${xy[0] + 1}_${xy[1] - 1}`],
-    cells[`${xy[0] + 1}_${xy[1]}`],
-    cells[`${xy[0] + 1}_${xy[1] + 1}`]
-  ];
-  const nbCount = nb.reduce((prev, id) => prev + (id ? 1 : 0), 0);
-
-  let retValue = false;
-  if ([2, 3].includes(nbCount) && cells[`${xy[0]}_${xy[1]}`]) {
-    retValue = true;
-  }
-  if (nbCount === 3 && !cells[`${xy[0]}_${xy[1]}`]) {
-    retValue = true;
-  }
-  return retValue;
-};
-
-const runGeneration = (state, action) => {
-  let cells = {};
-  Object.keys(state.cells).map(item => {
-    const cellsToProcess = [];
-    const xy = item.split("_").map(num => parseInt(num));
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0] - 1}_${xy[1] + 1}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0]}_${xy[1] + 1}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] - 1}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1]}`); 
-    cellsToProcess.push(`${xy[0] + 1}_${xy[1] + 1}`); 
-    
-    cellsToProcess.map(item => {
-      if (calculateCell(item, state.cells)) {
-        cells[item] = true;
-      }
-      return false;
-    });
-  });
-
-  const generationHistory = state.generationHistory.slice(state.generationHistory.length - 500);
-  generationHistory.push(new Date().getTime());
-  const velocity = calculateVelocity(generationHistory);
-
-  return {
-    ...state,
-    generationNo: ++state.generationNo,
-    alivedCells: Object.keys(cells).length,
-    cells,
-    generationHistory,
-    velocity
-  };
-};
 
 const changeCell = (state, action) => {
   let cells = state.cells.map(item => [...item]);
@@ -105,7 +28,7 @@ const changeCell = (state, action) => {
   };
 };
 
-const clearCells = (state, action) => {
+const clearCells = (state) => {
   const cells = {};
   return {
     ...state,
@@ -115,21 +38,19 @@ const clearCells = (state, action) => {
   };
 };
 
-const fillFormation = (state, action) => {
-  const formation = formations.matrixes[action.payload.formation];
-  let startX = Math.ceil(formation[0].length / 2);
-  let startY = Math.ceil(formation.length / 2);
-  const cells = {};
-  for (let i = -1 * startX; i < formation[0].length - startX; i++) {
-    for (let j = -1 * startY; j < formation.length - startY; j++) {
-      if (formation[j + startY][i + startX]) {
-        cells[`${i}_${j}`] = true;
-      }
-    }
-  }
+const nextGeneration = (state, action) => {
+  const {
+    cells,
+    generationNo = state.generationNo + 1,
+    alivedCells = Object.keys(cells).length,
+    velocity = state.velocity
+  } = action.payload;
   return {
     ...state,
-    cells
+    cells,
+    generationNo,
+    alivedCells,
+    velocity
   };
 };
 
@@ -156,8 +77,6 @@ const changeSpeed = (state, action) => {
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.RUN_GENERATION:
-      return runGeneration(state, action);
     case actionTypes.CHANGE_CELL:
       return changeCell(state, action);
     case actionTypes.CLEAR_CELLS:
@@ -166,10 +85,10 @@ const reducer = (state = initialState, action) => {
       return startExistence(state, action);
     case actionTypes.STOP_EXISTENCE:
       return stopExistence(state, action);
-    case actionTypes.FILL_FORMATION:
-      return fillFormation(state, action);
     case actionTypes.CHANGE_SPEED:
       return changeSpeed(state, action);
+    case actionTypes.NEXT_GENERATION:
+      return nextGeneration(state, action);
     default:
       return state;
   }

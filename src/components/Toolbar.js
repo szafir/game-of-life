@@ -2,15 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import * as actionTypes from "../actions/actionTypes";
-import {
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel
-} from "@material-ui/core";
+import { Button, Select, MenuItem, FormControl, InputLabel } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import formations from "../formations";
+import FormationDialog from "./FormationDialog";
 
 const styles = theme => ({
   toolbar: {
@@ -40,7 +35,8 @@ class Toolbar extends Component {
   }
   state = {
     interval: 0,
-    formation: ""
+    formation: "",
+    showImportPopup: false
   };
 
   componentDidMount() {
@@ -49,11 +45,9 @@ class Toolbar extends Component {
         value: 3
       }
     });
-    // this.executeNextGeneration();
-    // this.executeRun();
   }
   executeNextGeneration = () => {
-    this.props.nextGeneration();
+    this.props.nextGeneration({ cells: this.props.cells });
   };
   executeClear = () => {
     this.props.clearCells();
@@ -62,16 +56,27 @@ class Toolbar extends Component {
     this.props.startExistence();
   };
   executeFormationChange = event => {
+    const { value } = event.target;
     this.setState({
-      formation: event.target.value
+      formation: value
     });
-    if (event.target.value === "") {
+    if (value === "") {
       this.props.clearCells();
+    } else if (value === "-1") {
+      this.setState({ showImportPopup: true });
     } else {
       this.props.fillFormation({
-        formation: event.target.value
+        formation: parseInt(value)
       });
     }
+  };
+
+  handleImportClose = () => {
+    this.setState({ showImportPopup: false });
+  };
+  handleImport = pattern => {
+    this.props.fillFormation({ pattern });
+    this.handleImportClose();
   };
 
   render() {
@@ -139,24 +144,31 @@ class Toolbar extends Component {
                   {item}
                 </MenuItem>
               ))}
+              <MenuItem value="-1">Import pattern</MenuItem>
             </Select>
           </FormControl>
         </div>
+        <FormationDialog
+          open={this.state.showImportPopup}
+          handleClose={this.handleImportClose}
+          handleImport={this.handleImport}
+        />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  shouldRun: state.cell.shouldRun
+  shouldRun: state.cell.shouldRun,
+  cells: state.cell.cells
 });
 const mapDispatchToProps = dispatch => ({
-  nextGeneration: () => dispatch(actions.nextGeneration()),
+  nextGeneration: payload => dispatch(actions.nextGeneration(payload)),
   clearCells: () => dispatch({ type: actionTypes.CLEAR_CELLS }),
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
-  fillFormation: payload =>
-    dispatch({ type: actionTypes.FILL_FORMATION, payload })
+  fillFormation: payload => dispatch(actions.fillFormation(payload)),
+  importFormation: payload => dispatch(actions.importFormation(payload))
 });
 export default connect(
   mapStateToProps,

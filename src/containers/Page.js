@@ -19,13 +19,9 @@ const styles = theme => ({
 });
 
 class Page extends Component {
-  constructor(refs) {
-    super(refs);
-    // this.pageRef = React.createRef();
-  }
   render() {
     const { classes } = this.props;
-    // console.log(this.pageRef);
+
     return (
       <>
         <Header pathname={this.props.location.pathname} />

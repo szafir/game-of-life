@@ -7,27 +7,29 @@ import * as actionTypes from "../actions/actionTypes";
 const withPanelState = WrappedComponent => {
   class PanelHOC extends Component {
     componentDidUpdate(prevProps) {
-        // console.log(prevProps);
-        // console.log(this.props);
-        // console.log('-----');
-      if (this.props.shouldRun && !this.props.isDragging && prevProps.populationSpeed === this.props.populationSpeed) {
+      // console.log(prevProps);
+      // console.log(this.props);
+      // console.log('-----');
+      if (
+        this.props.shouldRun &&
+        !this.props.isDragging &&
+        prevProps.populationSpeed === this.props.populationSpeed
+      ) {
         requestAnimationFrame(() => {
           setTimeout(() => {
-            this.props.nextGeneration();
+            this.props.nextGeneration({cells: this.props.cells});
           }, prevProps.populationSpeed);
         });
       }
     }
 
-  
-
     render() {
       return (
         <WrappedComponent
           {...this.props}
-        //   onMouseDownCapture={this.handleOnMouseDownCapture}
-        //   onMouseUpCapture={this.handleOnMouseUpCapture}
-        //   onMouseMoveCapture={this.handleOnMouseMoveCapture}
+          //   onMouseDownCapture={this.handleOnMouseDownCapture}
+          //   onMouseUpCapture={this.handleOnMouseUpCapture}
+          //   onMouseMoveCapture={this.handleOnMouseMoveCapture}
         />
       );
     }
@@ -45,7 +47,7 @@ const withPanelState = WrappedComponent => {
     populationSpeed: state.cell.populationSpeed
   });
   const mapDispatchToProps = dispatch => ({
-    nextGeneration: () => dispatch(actions.nextGeneration()),
+    nextGeneration: payload => dispatch(actions.nextGeneration(payload)),
     changeCell: (row, col) => dispatch({ type: actionTypes.CHANGE_CELL, payload: { row, col } }),
     dragStart: payload =>
       dispatch({

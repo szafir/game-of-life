@@ -3,11 +3,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   cell: {
-    background: "#aaa",
+
     display: "block",
     width: 6,
     height: 6,
-    // border: "1px solid rgb(220, 220, 220)",
     position: "absolute",
     top: 0,
     left: 0,

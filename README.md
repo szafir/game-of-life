@@ -10,5 +10,8 @@ The rules:
 
 Form more information about the game itself, visit:
 
-https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+
+
 http://www.conwaylife.com/
+
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Cell from "./Cell";
 
 import { withStyles } from "@material-ui/core/styles";
-import { relative } from "path";
 
 const styles = theme => ({
   paper: {
