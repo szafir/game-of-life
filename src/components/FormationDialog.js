@@ -25,6 +25,7 @@ class FormationDialog extends Component {
       pattern: ""
     };
   }
+  
   handleImport = () => {
     this.props.handleImport(this.state.pattern);
   };
@@ -64,11 +65,12 @@ class FormationDialog extends Component {
             wiki.
           </DialogContentText>
           <TextField
+            error={this.props.hasError}
             className={classes.textField}
             autoFocus
             margin="dense"
             id="Pattern"
-            label="Pattern"
+            label={this.props.hasError ? "Invalid pattern" : "Pattern"}
             value={this.state.pattern}
             helperText="Paste content of RLE file"
             type="text"

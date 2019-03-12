@@ -35,8 +35,7 @@ class Toolbar extends Component {
   }
   state = {
     interval: 0,
-    formation: "",
-    showImportPopup: false
+    formation: ""
   };
 
   componentDidMount() {
@@ -63,7 +62,7 @@ class Toolbar extends Component {
     if (value === "") {
       this.props.clearCells();
     } else if (value === "-1") {
-      this.setState({ showImportPopup: true });
+      this.props.importPopup(true);
     } else {
       this.props.fillFormation({
         formation: parseInt(value)
@@ -72,11 +71,13 @@ class Toolbar extends Component {
   };
 
   handleImportClose = () => {
-    this.setState({ showImportPopup: false });
+    this.props.importPopup(false);
+    this.props.clearImportError();
   };
   handleImport = pattern => {
+    this.props.clearImportError();
     this.props.fillFormation({ pattern });
-    this.handleImportClose();
+    this.props.importPopup(false);
   };
 
   render() {
@@ -149,7 +150,8 @@ class Toolbar extends Component {
           </FormControl>
         </div>
         <FormationDialog
-          open={this.state.showImportPopup}
+          open={this.props.showImportPopup || this.props.importError}
+          hasError={this.props.importError}
           handleClose={this.handleImportClose}
           handleImport={this.handleImport}
         />
@@ -160,7 +162,9 @@ class Toolbar extends Component {
 
 const mapStateToProps = state => ({
   shouldRun: state.cell.shouldRun,
-  cells: state.cell.cells
+  cells: state.cell.cells,
+  importError: state.cell.importError,
+  showImportPopup: state.cell.showImportPopup
 });
 const mapDispatchToProps = dispatch => ({
   nextGeneration: payload => dispatch(actions.nextGeneration(payload)),
@@ -168,7 +172,10 @@ const mapDispatchToProps = dispatch => ({
   startExistence: () => dispatch({ type: actionTypes.START_EXISTENCE }),
   stopExistence: () => dispatch({ type: actionTypes.STOP_EXISTENCE }),
   fillFormation: payload => dispatch(actions.fillFormation(payload)),
-  importFormation: payload => dispatch(actions.importFormation(payload))
+  clearImportError: () =>
+    dispatch({ type: actionTypes.IMPORT_ERROR, payload: { importError: false } }),
+  importPopup: showImportPopup =>
+    dispatch({ type: actionTypes.IMPORT_POPUP, payload: { showImportPopup } })
 });
 export default connect(
   mapStateToProps,

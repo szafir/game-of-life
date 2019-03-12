@@ -10,8 +10,17 @@ export const fillFormation = payload => {
   if (Number.isInteger(formation)) {
     pattern = formations.patterns[formation];
   }
-
   const parsedData = parseRLE(pattern);
+
+  if(!parsedData) {
+    return {
+      type: actionTypes.IMPORT_ERROR,
+      payload: {
+        importError: true 
+      }
+    };
+  }
+
   const { boundingBox, parsedLines } = parsedData;
   let translateX = Math.ceil(boundingBox[0] / 2);
   let translateY = Math.ceil(boundingBox[1] / 2);
@@ -56,18 +65,6 @@ export const nextGeneration = payload => {
     payload: {
       cells: calculatedCells,
       velocity
-    }
-  };
-};
-
-export const importFormation = payload => {
-  console.log(payload);
-
-  return {
-    type: false,
-    payload: {
-      // cells: calculatedCells,
-      // velocity
     }
   };
 };

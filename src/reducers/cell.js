@@ -9,7 +9,9 @@ const initState = () => {
     cellSize,
     velocity: 0,
     shouldRun: false,
-    populationSpeed: 100 // in ms
+    populationSpeed: 100, // in ms
+    importError: false,
+    showImportPopup: false
   };
   return initialState;
 };
@@ -28,7 +30,7 @@ const changeCell = (state, action) => {
   };
 };
 
-const clearCells = (state) => {
+const clearCells = state => {
   const cells = {};
   return {
     ...state,
@@ -75,6 +77,23 @@ const changeSpeed = (state, action) => {
     populationSpeed
   };
 };
+const importError = (state, action) => {
+  const { importError } = action.payload;
+  return {
+    ...state,
+    importError
+  };
+};
+
+const importPopup = (state, action) => {
+  // console.log(action.payload);
+  const { showImportPopup } = action.payload;
+  return {
+    ...state,
+    showImportPopup
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CHANGE_CELL:
@@ -89,6 +108,10 @@ const reducer = (state = initialState, action) => {
       return changeSpeed(state, action);
     case actionTypes.NEXT_GENERATION:
       return nextGeneration(state, action);
+    case actionTypes.IMPORT_ERROR:
+      return importError(state, action);
+    case actionTypes.IMPORT_POPUP:
+      return importPopup(state, action);
     default:
       return state;
   }

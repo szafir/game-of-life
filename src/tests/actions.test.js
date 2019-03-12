@@ -16,4 +16,32 @@ x = 13, y = 10, rule = b3/s23
     expect(result["parsedLines"].length).toBeGreaterThan(0);
     expect(result["parsedLines"].join("")).toEqual("bboobbbbboobbbbobobbbobobbbbbobbbbbobbbobbbbbobbbbboooooobbbooooobbbbbobobbbbbbboobbbbboobbbbobbbbbbbobbbbbobbbbbobbbbboobbbbboo");
   });
+
+  test("Pattern is incorrect - missing coordinates", () => {
+    const pattern = `#N 37P10.1
+#O Dean Hickerson
+#C The smallest known non-trivial period-10 oscillator in terms of
+#C bounding box
+#C http://www.conwaylife.com/wiki/index.php?title=37P10.1
+2b2o5b2o2b$2bobo3bobo2b$3bo5bo3b$o5bo5bo$5o3b5o$5bobo5b$2b2o5b2o2b$2bo
+7bo2b$3bo5bo3b$2b2o5b2o!`;
+    const result = parseRLE(pattern);
+    expect(result).toBe(false);
+  });
+  test("Pattern is incorrect - coordinates different than definition", () => {
+    const pattern = `x = 13, y = 10, rule = b3/s23
+2b2o5b2o2b!`;
+    const result = parseRLE(pattern);
+    expect(result).toBe(false);
+  });
+  test("Pattern is incorrect - random string", () => {
+    const pattern = `testtestest`;
+    const result = parseRLE(pattern);
+    expect(result).toBe(false);
+  });
+  test("Pattern is incorrect - empty string", () => {
+    const pattern = ``;
+    const result = parseRLE(pattern);
+    expect(result).toBe(false);
+  });
 });
