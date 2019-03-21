@@ -5,10 +5,10 @@ class RLEParser {
     this.pattern = this.preparePattern(pattern);
   }
   preparePattern = pattern => {
-    const lines = pattern.split("\n").filter(line => line && line.indexOf("#") !== 0);
+    const lines = pattern.split("\n").filter(line => line && line.indexOf("#") !== 0).map(line => line.trim());
     this.boundingBox = this.parseBoundingBox(lines[0]);
     lines.shift();
-    return lines.join("\n");
+    return lines.join("");
   };
 
   parseBoundingBox = line => {

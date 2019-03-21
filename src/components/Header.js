@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import {
   List, ListItem, ListItemText, Drawer, Divider, AppBar, Toolbar, Typography, Badge
@@ -14,13 +13,18 @@ const styles = theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    zIndex: 1000
+    zIndex: 1000,
+    overflow: "hidden",
+    "& > div": {
+      width: drawerWidth,
+    }
   },
   drawerPaper: {
     width: drawerWidth,
   },
   toolbar: {
     height: theme.spacing.unit * 8,
+    width: "100%"
   },
   nestedListItem: {
     paddingLeft: theme.spacing.unit * 4,
@@ -40,7 +44,7 @@ const Header = (props) => {
       speed: value
     })
   }
-  const { classes, pathname } = props;
+  const { classes, populationSpeed } = props;
   return (
     <>
       <AppBar position="fixed" color="default" >
@@ -55,16 +59,16 @@ const Header = (props) => {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button component={NavLink} to="/" selected={pathname === "/"} >
+          {/* <ListItem button component={NavLink} to="/" selected={pathname === "/"} >
             <ListItemText>Position implementation</ListItemText>
-          </ListItem>
+          </ListItem> */}
           {/* <ListItem button component={NavLink} to="/flexbox" selected={pathname === "/flexbox"}>
             <ListItemText>Flexbox implementation</ListItemText>
           </ListItem>
           <ListItem button component={NavLink} to="/canvas" selected={pathname === "/canvas"}>
             <ListItemText>Canvas implementation</ListItemText>
           </ListItem> */}
-          <Divider />
+      
           <ListItem >
             <ListItemText>Statistics:</ListItemText>
           </ListItem>
@@ -84,7 +88,7 @@ const Header = (props) => {
             </Badge>
           </ListItem>
         </List>
-        <Slider label={`Speed`} onChange={changeSpeed}/>
+        <Slider label={`Speed`} onChange={changeSpeed} populationSpeed={populationSpeed} />
       </Drawer>
     </>
   );
@@ -95,6 +99,7 @@ const mapStateToProps = state => ({
   alivedCells: state.cell.alivedCells,
   cellsAmount: state.cell.cellsAmount,
   velocity: state.cell.velocity,
+  populationSpeed: state.cell.populationSpeed
 });
 
 const mapDispatchToProps = dispatch => ({

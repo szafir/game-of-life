@@ -7,9 +7,6 @@ import * as actionTypes from "../actions/actionTypes";
 const withPanelState = WrappedComponent => {
   class PanelHOC extends Component {
     componentDidUpdate(prevProps) {
-      // console.log(prevProps);
-      // console.log(this.props);
-      // console.log('-----');
       if (
         this.props.shouldRun &&
         !this.props.isDragging &&
@@ -17,21 +14,14 @@ const withPanelState = WrappedComponent => {
       ) {
         requestAnimationFrame(() => {
           setTimeout(() => {
-            this.props.nextGeneration({cells: this.props.cells});
-          }, prevProps.populationSpeed);
+            this.props.nextGeneration({ cells: this.props.cells });
+          }, Math.ceil((100 - prevProps.populationSpeed) * 0.01 * 200));
         });
       }
     }
 
     render() {
-      return (
-        <WrappedComponent
-          {...this.props}
-          //   onMouseDownCapture={this.handleOnMouseDownCapture}
-          //   onMouseUpCapture={this.handleOnMouseUpCapture}
-          //   onMouseMoveCapture={this.handleOnMouseMoveCapture}
-        />
-      );
+      return <WrappedComponent {...this.props} />;
     }
   }
 

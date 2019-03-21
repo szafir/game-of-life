@@ -41,7 +41,8 @@ class Toolbar extends Component {
   componentDidMount() {
     this.executeFormationChange({
       target: {
-        value: 3
+        value: 
+        6
       }
     });
   }

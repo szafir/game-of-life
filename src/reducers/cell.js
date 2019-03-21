@@ -9,7 +9,7 @@ const initState = () => {
     cellSize,
     velocity: 0,
     shouldRun: false,
-    populationSpeed: 100, // in ms
+    populationSpeed: 80, // in %
     importError: false,
     showImportPopup: false
   };
@@ -70,11 +70,9 @@ const stopExistence = (state, action) => {
 };
 const changeSpeed = (state, action) => {
   let { speed } = action.payload;
-  speed = 101 - speed;
-  let populationSpeed = speed * 10;
   return {
     ...state,
-    populationSpeed
+    populationSpeed: speed
   };
 };
 const importError = (state, action) => {
@@ -86,13 +84,13 @@ const importError = (state, action) => {
 };
 
 const importPopup = (state, action) => {
-  // console.log(action.payload);
   const { showImportPopup } = action.payload;
   return {
     ...state,
     showImportPopup
   };
 };
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

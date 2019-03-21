@@ -14,7 +14,8 @@ const styles = theme => ({
   panelContainer: {
     marginTop: theme.spacing.unit * 8,
     flexGrow: 1,
-    display: "flex"
+    display: "flex",
+    overflow: "hidden"
   }
 });
 
